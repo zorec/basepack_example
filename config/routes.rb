@@ -16,13 +16,15 @@ IssueTracker::Application.routes.draw do
       #put    'list_columns', :on => :collection
   end
 
+  resources :projects, concerns: :resourcable
+
   resources :acts_as_taggable_on_tags, :filters, concerns: :resourcable
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'welcome#index'
+  root 'projects#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
