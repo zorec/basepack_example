@@ -32,6 +32,8 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+gem 'lepidlo', path: '../lepidlo'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -43,3 +45,18 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+gem "cancan"
+gem "devise"
+gem "jquery-turbolinks"
+gem "inherited_resources", "~> 1.4.1"
+gem "ransack", "~> 1.0"
+gem "kaminari"
+gem "simple_form", "~> 3.0.0.rc"
+gem "settingslogic"
+gem "twitter-bootstrap-rails"
+gem "bootbox-rails"
+gem "rack-cache", require: "rack/cache"
+gem "dragonfly"
+gem "delayed_job_active_record", ">= 4.0.0.beta2"
+gem "strip_attributes", "~> 1.2"
