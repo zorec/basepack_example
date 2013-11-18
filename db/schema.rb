@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131117205058) do
+ActiveRecord::Schema.define(version: 20131118172408) do
 
   create_table "filters", force: true do |t|
     t.string   "filter_type"
@@ -57,6 +57,19 @@ ActiveRecord::Schema.define(version: 20131117205058) do
 
   add_index "imports_importables", ["import_id"], name: "index_imports_importables_on_import_id"
   add_index "imports_importables", ["importable_id"], name: "index_imports_importables_on_importable_id"
+
+  create_table "issues", force: true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.boolean  "open"
+    t.integer  "project_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "issues", ["project_id"], name: "index_issues_on_project_id"
+  add_index "issues", ["user_id"], name: "index_issues_on_user_id"
 
   create_table "projects", force: true do |t|
     t.string   "name"

@@ -1,5 +1,4 @@
-Issue tracker - demo application for **Lepidlo**
+Example application for **Lepidlo**
 =======
 
-
-Work in progress!!!
+Work in progress!

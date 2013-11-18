@@ -46,6 +46,7 @@ gem 'lepidlo', path: '../lepidlo'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+# installed by lepidlo
 gem "cancan"
 gem "devise"
 gem "jquery-turbolinks"
@@ -60,3 +61,6 @@ gem "rack-cache", require: "rack/cache"
 gem "dragonfly"
 gem "delayed_job_active_record", ">= 4.0.0.beta2"
 gem "strip_attributes", "~> 1.2"
+
+
+gem "annotate", group: [:development]

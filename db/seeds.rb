@@ -5,3 +5,12 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+project = Project.create(name: "Project A")
+
+
+Issue.create(name: "Issue 1", project_id: project.id)
+Issue.create(name: "Issue 2", project_id: project.id)
+Issue.create(name: "Issue 3", project_id: project.id)
+
+ 

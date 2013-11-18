@@ -16,7 +16,11 @@ IssueTracker::Application.routes.draw do
       #put    'list_columns', :on => :collection
   end
 
-  resources :projects, concerns: :resourcable
+  resources :issues, concerns: :resourcable
+
+  resources :projects, concerns: :resourcable do
+    resources :issues, concerns: :resourcable
+  end
 
   resources :acts_as_taggable_on_tags, :filters, concerns: :resourcable
   devise_for :users

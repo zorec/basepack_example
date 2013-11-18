@@ -1,0 +1,8 @@
+<%= render "header" %>
+<%= render "show" %>
+
+<h3><%= model_name_pluralize Issue %></h3>
+<% list_form = list_form_for(query_form_for([association_chain, resource, Issue].flatten, resource.issues)) %>
+<%= form_render list_form %>
+
+<%= link_to "New issue", new_issue_path, :class => "btn"  %>
