@@ -18,7 +18,14 @@ class Issue < ActiveRecord::Base
 
   validates_presence_of :name
 
+  acts_as_taggable
+
   rails_admin do
+    show do
+      exclude_fields :base_tags
+      field :tags
+    end
+
     list do
       # display issue name as a link
       field :name do
@@ -30,6 +37,8 @@ class Issue < ActiveRecord::Base
       field :description
       field :open
       field :project
+      field :tag_list
+      exclude_fields :base_tags, :tags, :tag_list
     end
 
     edit do
@@ -37,6 +46,10 @@ class Issue < ActiveRecord::Base
       field :description
       field :open
       field :project
+      exclude_fields :base_tags, :tags
+      field :tag_list do
+        partial 'tag_list_with_suggestions'
+      end
     end
   end
 end

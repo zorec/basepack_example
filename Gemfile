@@ -33,7 +33,8 @@ group :doc do
 end
 
 gem 'lepidlo', path: '../lepidlo'
-
+gem "acts-as-taggable-on"
+  
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

@@ -1,0 +1,2 @@
+class ActsAsTaggableOnTagsController < ResourcesController
+end

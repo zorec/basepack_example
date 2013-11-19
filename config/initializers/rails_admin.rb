@@ -31,5 +31,5 @@ RailsAdmin.config do |config|
 
   # Include specific models (exclude the others):
 
-  config.included_models = Lepidlo::Utils.detect_models #+ ['ActsAsTaggableOn::Tag', 'Delayed::Job']
+  config.included_models = Lepidlo::Utils.detect_models + ['ActsAsTaggableOn::Tag'] # + ['Delayed::Job']
 end

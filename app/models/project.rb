@@ -36,7 +36,6 @@ class Project < ActiveRecord::Base
       field :start
       field :end
       field :user
-      field :issues
     end
 
     edit do
