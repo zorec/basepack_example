@@ -54,6 +54,7 @@ GEM
       tzinfo (~> 0.3.37)
     acts-as-taggable-on (2.4.1)
       rails (>= 3, < 5)
+    acts_as_commentable (4.0.0)
     annotate (2.5.0)
       rake
     arel (4.0.1)
@@ -244,6 +245,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on
+  acts_as_commentable
   annotate
   bootbox-rails
   cancan

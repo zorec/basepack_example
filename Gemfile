@@ -34,6 +34,7 @@ end
 
 gem 'lepidlo', path: '../lepidlo'
 gem "acts-as-taggable-on"
+gem 'acts_as_commentable'
   
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

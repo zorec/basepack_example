@@ -16,8 +16,10 @@ IssueTracker::Application.routes.draw do
       #put    'list_columns', :on => :collection
   end
 
-  resources :issues, concerns: :resourcable
-
+  resources :issues, concerns: :resourcable do
+    resources :comments, concerns: :resourcable
+  end
+  
   resources :projects, concerns: :resourcable do
     resources :issues, concerns: :resourcable
   end

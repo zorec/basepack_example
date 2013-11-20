@@ -18,12 +18,19 @@ class Issue < ActiveRecord::Base
 
   validates_presence_of :name
 
-  acts_as_taggable
+  acts_as_commentable
 
+  after_initialize do 
+    if new_record?
+      self.open = true
+    end
+  end
+
+  acts_as_taggable
+  
   rails_admin do
     show do
       exclude_fields :base_tags
-      field :tags
     end
 
     list do
@@ -44,7 +51,9 @@ class Issue < ActiveRecord::Base
     edit do
       field :name
       field :description
-      field :open
+      field :open do 
+        true
+      end
       field :project
       exclude_fields :base_tags, :tags
       field :tag_list do

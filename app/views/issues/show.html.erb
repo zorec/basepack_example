@@ -1,0 +1,15 @@
+<%= render 'header' %>
+<%= render 'show' %>
+
+<% if resource.comments.any? %>
+  <ul>
+    <% resource.comments.each do |c| %>
+      <li><%= c.comment %></li>
+    <% end %> 
+  </ul>
+<% end %>
+
+<%= simple_form_for [resource, Comment.new] do |f| %>
+  <%= f.input :comment, as: :text %>
+  <%= f.button :submit, "Comment on issue" %>
+<% end %>
