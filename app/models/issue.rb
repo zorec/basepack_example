@@ -41,11 +41,8 @@ class Issue < ActiveRecord::Base
           bindings[:view].link_to o.name, o 
         end
       end
-      field :description
-      field :open
-      field :project
-      field :tag_list
-      exclude_fields :base_tags, :tags, :tag_list
+      field :open      
+      exclude_fields :base_tags, :tags, :tag_list, :project
     end
 
     edit do

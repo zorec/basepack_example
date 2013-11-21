@@ -23,19 +23,23 @@ class Project < ActiveRecord::Base
 
   rails_admin do
     list do
-      field :name
-      field :description
-      field :start
-      field :end
-      field :user
+      field :user do 
+        label "Author"
+        pretty_value do
+          bindings[:object].user || "Anonymous"
+        end
+      end
+      exclude_fields :id, :created_at, :updated_at, :issues
     end
-    
+
     show do
-      field :name
-      field :description
-      field :start
-      field :end
-      field :user
+      field :user do 
+        label "Author"
+        pretty_value do
+          bindings[:object].user || "Anonymous"
+        end
+      end
+      exclude_fields :id, :created_at, :updated_at, :issues
     end
 
     edit do
