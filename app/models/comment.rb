@@ -11,4 +11,8 @@ class Comment < ActiveRecord::Base
   #acts_as_voteable
 
   belongs_to :user
+
+  def to_label
+    comment
+  end
 end

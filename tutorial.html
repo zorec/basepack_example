@@ -1,0 +1,83 @@
+TODO - format, tutorial about writing, styling, spelling check
+<h2>Introduction and guide assumptions</h2>
+
+This guide is designed for learning basepack which is based on Ruby on Rails framework. So it is necessary that you have a previous experience with Rails. Basepack ties together a collection of gems which are helpful in any application. It really is a well packed Ruby on Rails framework with additional features on top of it. 
+So for easy start it is highly recommended that you are familiar with gems below (you have used them at least in one application). These gems are essential part of basepack.
+* devise
+* cancan
+* rails_admin especially rails_admin DSL
+* inherited_resources
+* nested_form
+And being familiar with these may also help:
+* ransack
+* simple_form
+* kaminari
+
+
+<h2>First application with basepack</h2>
+TODO version of RAILS
+TODO in which person should I write it
+
+In this tutorial we will be creating issue tracking application. But first of all, let's create a new rails application
+```console
+rails new issue_tracker
+```
+
+Now we can add basepack to Gemfile.
+```ruby
+gem 'basepack'
+```
+
+This creates a new generator for installing basepack so let's run it:
+```console
+rails g basepack:install
+```
+TODO: what if I answer no to these questions
+
+The generator notices absence of devise and cancan and offers installing them as well. Then you can use application.html.haml template from rails_admin.
+
+
+ First of all, let's generate a Project scaffold.
+Looks a way nicer than Rails scaffolding.
+Now lepidlo will take over scaffolding
+```
+rails g scaffold Project name description:text start:date end:date user:belongs_to
+```
+generated files
+
+Screenshots - TODO(ENGLISH)
+It includes pagination, searching
+
+And generated code looks differently as well Comparision of Rails scaffold and basepack scaffold. 
+Let's take a look at that buety. But it would be nicer without id, created_at, updated_at columns
+
+Add validation
+Data types
+
+
+<h3>Project's issues</h3>
+<!-- Show where we are going  -->
+Project has many issues. So we want to display issues on project show page.
+So let's repeat the same process for Issue and create scaffold for it.
+
+Just add the field and association is detected.
+
+If there were a lot of projects it will be better not to display tasks which already ended. 
+
+Let's display it as a nested resource.
+
+We need to configure controllers
+
+Options
+Simple
+
+
+
+Track who created project
+Show user email instead of object -> name, to_label
+
+Let's create issue
+rails g scaffold Issue name description project:belongs_to user:belongs_to
+rake db:migrate
+let's show it as a nested resource and configure showed fields and in edit also (project belongs_to works)
+issue - user who created it

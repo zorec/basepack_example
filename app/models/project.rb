@@ -15,6 +15,7 @@
 class Project < ActiveRecord::Base
   belongs_to :user, inverse_of: :created_projects
   has_many :issues, inverse_of: :project
+  has_many :tags, through: :issues
   
   validates_presence_of :name
   validates_uniqueness_of :name
@@ -23,13 +24,13 @@ class Project < ActiveRecord::Base
 
   rails_admin do
     list do
+      exclude_fields :id, :created_at, :updated_at, :issues
       field :user do 
         label "Author"
         pretty_value do
           bindings[:object].user || "Anonymous"
         end
       end
-      exclude_fields :id, :created_at, :updated_at, :issues
     end
 
     show do

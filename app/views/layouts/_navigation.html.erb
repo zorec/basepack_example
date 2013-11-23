@@ -8,7 +8,7 @@
           <%#= menu_item model_name_pluralize(User), main_app.users_path %>
         <%# end %>
 
-        <%= drop_down '<i class="icon-cog"></i>Dočasně' do %>
+        <%= drop_down '<i class="icon-cog"></i> Temporary' do %>
           <% RailsAdmin::Config.models.each do |m| %>
             <% next unless (main_app.url_for(m.abstract_model.model) rescue nil)  #hack: some of the models do not have controllers and i don't want to display them %>
             <%= menu_item model_name_pluralize(m.abstract_model.model), main_app.url_for(m.abstract_model.model) %>

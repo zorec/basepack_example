@@ -19,6 +19,7 @@ class Issue < ActiveRecord::Base
   validates_presence_of :name
 
   acts_as_commentable
+  acts_as_taggable
 
   after_initialize do 
     if new_record?
@@ -26,7 +27,6 @@ class Issue < ActiveRecord::Base
     end
   end
 
-  acts_as_taggable
   
   rails_admin do
     show do
@@ -51,7 +51,11 @@ class Issue < ActiveRecord::Base
       field :open do 
         true
       end
-      field :project
+      field :project do
+        visible do
+          IssuesController === bindings[:controller]
+        end
+      end
       exclude_fields :base_tags, :tags
       field :tag_list do
         partial 'tag_list_with_suggestions'
