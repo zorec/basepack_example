@@ -1,10 +1,20 @@
 <%= render "header" %>
 <%= render "show" %>
 
+
+<!-- <h3><%= model_name_pluralize Issue %></h3>
+<%# list_form = list_form_for(query_form_for([association_chain, resource, Issue].flatten, resource.issues)) %>
+<%#= form_render list_form %> -->
+
+<h3>Add new issue</h3>
+<%= form_render edit_form_for([association_chain, resource, Issue].flatten) %>
+
+
 <h3><%= model_name_pluralize Issue %></h3>
-<% list_form = list_form_for(query_form_for([association_chain, resource, Issue].flatten, resource.issues)) %>
-<%= form_render list_form %>
+<% resource.issues.each do |issue| %>
+  <div><%= form_render show_form_for([association_chain, issue]) %></div>
+<% end %> 
 
-<%=  form_render edit_form_for([association_chain, resource, Issue].flatten) %>
-
-<%= link_to "New issue", new_issue_path, :class => "btn"  %>
+<% unless resource.issues.any? %>
+  <p>No issues</p>
+<% end %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131120153838) do
+ActiveRecord::Schema.define(version: 20131124174331) do
 
   create_table "comments", force: true do |t|
     t.string   "title",            limit: 50, default: ""
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(version: 20131120153838) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "version_id"
   end
 
   add_index "issues", ["project_id"], name: "index_issues_on_project_id"
@@ -132,5 +133,12 @@ ActiveRecord::Schema.define(version: 20131120153838) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+
+  create_table "versions", force: true do |t|
+    t.string   "name"
+    t.integer  "project_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

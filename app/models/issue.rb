@@ -10,10 +10,12 @@
 #  user_id     :integer
 #  created_at  :datetime
 #  updated_at  :datetime
+#  version_id  :integer
 #
 
 class Issue < ActiveRecord::Base
   belongs_to :project, inverse_of: :issues
+  belongs_to :version, inverse_of: :issues
   belongs_to :user, inverse_of: :issues
 
   validates_presence_of :name
@@ -56,6 +58,17 @@ class Issue < ActiveRecord::Base
           IssuesController === bindings[:controller]
         end
       end
+
+      field :version do
+        param = "f[project_id_eq]"
+        options_source_params do
+          { param => bindings[:object].try(:id) || -1 }
+        end
+        html_attributes do
+          { data: { "dependant-filteringselect" => "field=project_id", "dependant-param" => param } }
+        end
+      end
+
       exclude_fields :base_tags, :tags
       field :tag_list do
         partial 'tag_list_with_suggestions'
