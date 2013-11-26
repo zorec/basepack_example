@@ -15,7 +15,8 @@ IssueTracker::Application.routes.draw do
       #patch  'list_columns', :on => :collection
       #put    'list_columns', :on => :collection
   end
-
+  resources :versions, concerns: :resourcable
+  
   resources :issues, concerns: :resourcable do
     resources :comments, concerns: :resourcable
   end
