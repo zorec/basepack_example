@@ -22,13 +22,6 @@ class Issue < ActiveRecord::Base
 
   acts_as_commentable
   acts_as_taggable
-
-  after_initialize do 
-    if new_record?
-      self.open = true
-    end
-  end
-
   
   rails_admin do
     show do
@@ -36,23 +29,21 @@ class Issue < ActiveRecord::Base
     end
 
     list do
-      # display issue name as a link
-      field :name do
-        formatted_value do
-          o = bindings[:object]
-          bindings[:view].link_to o.name, o 
-        end
-      end
-      field :open      
+      # display issue's name as a link
+      # field :name do
+      #   formatted_value do
+      #     o = bindings[:object]
+      #     bindings[:view].link_to o.name, o 
+      #   end
+      # end
+      # field :status, :enum
+      # field :resolution, :enum
       exclude_fields :base_tags, :tags, :tag_list, :project
     end
 
     edit do
       field :name
       field :description
-      field :open do 
-        true
-      end
       field :project do
         visible do
           IssuesController === bindings[:controller]
@@ -69,10 +60,33 @@ class Issue < ActiveRecord::Base
         end
       end
 
-      exclude_fields :base_tags, :tags
+      field :status, :enum do
+        html_attributes do
+        {   
+          data: { 
+            "dynamic-fields" => [
+              { condition: ["Unconfirmed", "New", "Assigned", "Reopened", "Ready"], field_actions: { resolution: { visible: false }} },
+              { condition: ["Resolved", "Verified"], field_actions: { resolution: { visible: true  }} },
+            ]   
+          }   
+        }   
+        end 
+      end
+      field :resolution, :enum
+
       field :tag_list do
         partial 'tag_list_with_suggestions'
       end
+      exclude_fields :base_tags, :tags
     end
   end
+
+  def status_enum
+    ["Unconfirmed", "New", "Assigned", "Reopened", "Ready", "Resolved", "Verified"]
+  end
+
+  def resolution_enum
+    ["Fixed", "Invalid", "Wontfix", "Worksforme", "Incomplete"]
+  end
+
 end
