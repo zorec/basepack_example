@@ -1,7 +1,6 @@
 class ProjectsController < ResourcesController
-  include Lepidlo::Import::Controller
 
-  # default_query do
-  #   { "f[end_gteq]" => Date.today } 
-  # end
+  default_query do
+    { "f[end_gteq_or_null]" => Date.today } 
+  end
 end

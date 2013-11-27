@@ -21,11 +21,19 @@ class Project < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
+  # strip_attributes :collapse_spaces => true
+
   accepts_nested_attributes_for :versions
 
   rails_admin do
+    exclude_fields :id, :created_at, :updated_at, :issues
+    
     list do
-      exclude_fields :id, :created_at, :updated_at, :issues
+      field :name do
+        formatted_value do 
+          bindings[:view].project_link(bindings[:object])
+        end
+      end
       field :user do 
         label "Author"
         pretty_value do
@@ -35,7 +43,6 @@ class Project < ActiveRecord::Base
     end
 
     show do
-      exclude_fields :id, :created_at, :updated_at, :issues
       field :user do 
         label "Author"
         pretty_value do
@@ -53,6 +60,7 @@ class Project < ActiveRecord::Base
         visible false
       end
       field :versions
+      exclude_fields :tags
     end
   end
 end

@@ -1,5 +1,4 @@
 class IssuesController < ResourcesController
-  include Lepidlo::Import::Controller
   belongs_to :project, optional: true
 
   # default_query do
