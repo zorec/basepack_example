@@ -24,7 +24,7 @@ class Issue < ActiveRecord::Base
   acts_as_taggable
   
   rails_admin do
-    exclude_fields :base_tags
+    exclude_fields :base_tags, :id, :created_at, :updated_at
     
     list do
       # display issue's name as a link
@@ -51,7 +51,7 @@ class Issue < ActiveRecord::Base
       field :version do
         param = "f[project_id_eq]"
         options_source_params do
-          { param => bindings[:object].try(:id) || -1 }
+          { param => bindings[:object].try(:project_id) || -1 }
         end
         html_attributes do
           { data: { "dependant-filteringselect" => "field=project_id", "dependant-param" => param } }
@@ -80,7 +80,7 @@ class Issue < ActiveRecord::Base
   end
 
   def status_enum
-    ["Unconfirmed", "New", "Assigned", "Reopened", "Ready", "Resolved", "Verified"]
+    ["Unconfirmed", "New", "Assigned", "Reopened", "Ready", "Resolved", "Verified"].map { |x| [(x+'<b>Closed</b>').html_safe,x]}
   end
 
   def resolution_enum
