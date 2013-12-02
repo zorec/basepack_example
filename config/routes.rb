@@ -1,4 +1,5 @@
 IssueTracker::Application.routes.draw do
+  devise_for :users
   concern :resourcable do
       get    'options',     :on => :collection
       get    'query',       :on => :collection
@@ -16,6 +17,7 @@ IssueTracker::Application.routes.draw do
       #put    'list_columns', :on => :collection
   end
   resources :versions, concerns: :resourcable
+  resources :users, concerns: :resourcable
   
   resources :issues, concerns: :resourcable do
     resources :comments, concerns: :resourcable
@@ -26,7 +28,6 @@ IssueTracker::Application.routes.draw do
   end
 
   resources :acts_as_taggable_on_tags, :filters, concerns: :resourcable
-  devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

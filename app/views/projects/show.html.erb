@@ -12,6 +12,9 @@
 <% resource.issues.each do |issue| %>
   <% issue_show_form = show_form_for(issue) do |form| %>
     <% form.hide_fileds :project %>
+    <% form.field :project do |field| %>
+      <% field.visible = false %>
+    <% end %>
   <% end %>
   <%= form_render issue_show_form %>
 <% end %>

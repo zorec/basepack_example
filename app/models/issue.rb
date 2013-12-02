@@ -80,7 +80,7 @@ class Issue < ActiveRecord::Base
   end
 
   def status_enum
-    ["Unconfirmed", "New", "Assigned", "Reopened", "Ready", "Resolved", "Verified"].map { |x| [(x+'<b>Closed</b>').html_safe,x]}
+    ["Unconfirmed", "New", "Assigned", "Reopened", "Ready", "Resolved", "Verified"]
   end
 
   def resolution_enum

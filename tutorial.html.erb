@@ -1,0 +1,370 @@
+TODO seperate generators for cancan, devise and cancan
+TODO collection_withouth pagination
+
+<!-- Questions and notes
+
+iterative style? (migration) or explain database schema at beginning?
+later 
+
+conflicts with wiki, readme(shorter version of that?)
+questions inline tutorial
+haml or erb
+
+issuetracker demo app:
+new issue on project or withouth that? with that
+globaly forbid id, created_at
+is it really just has_many association between version and issue
+yes
+what else is needed in system? (namespaces)
+label on issue status
+not necessary
+
+ -->
+
+
+Lepidlo enhancment:
+ideas - save default query:
+Layouts should be added only when answered true to remove application.html.erb
+filter saving error
+rgrep dlhe a
+delete visited
+
+TODO - seed data
+TODO replace ```/ za ```
+TODO - format (convention), styling, check, spelling
+TODO - links
+TODO - you
+TODO - README SIMPLIFY
+
+nested resource - explain nested resource (what is it)
+co je potreba pridat do routes.rb 
+co je potreba do controlleru - odkaz na inherited resources - https://github.com/josevalim/inherited_resources#belongs-to
+// kontroluje pristup k nadradenemu resource (vsetkym) a ci k nemu patri
+vyber select box - option, route
+advanced - zoznam pre nadradeney odkaz na dalsi
+
+tagging chapters http://docs.angularjs.org/
+new action - assigne to me
+
+## Introduction
+
+This tutorial is designed for learning lepidlo which is based on Ruby on Rails framework. So previous experience with Ruby on Rails is necessary you do not need to be an expert. For shorter introduction to lepidlo see [README] (https://github.com/lksv).  
+Lepidlo is a collection of gems (which are useful in any application) tied together with additional features on top of it. 
+So for easy start it is highly recommended that you are familiar with gems below (you have used them at least in one application) because these gems are essential part of lepidlo. If you are not familiar with them then you will find a lot of additional links to related sections during all tutorial.
+* [Devise](ttps://github.com/plataformatec/devise)
+* [Cancan](https://github.com/ryanb/cancan.git)
+* [Rails_admin](https://github.com/sferik/rails_admin) (especially [rails_admin DSL](https://github.com/sferik/rails_admin/wiki/Railsadmin-DSL))
+* [InheritedResources](https://github.com/josevalim/inherited_resources)
+* [SimpleForm](https://github.com/plataformatec/simple_form)
+* [Nested-form](https://github.com/ryanb/nested_form)
+
+And being familiar with these may also help:
+* [Ransack](https://github.com/activerecord-hackery/ransack)
+* [Kaminari](https://github.com/amatsuda/kaminari)
+* [bootstrap-sass](https://github.com/thomas-mcdonald/bootstrap-sass)
+
+The lepidlo requires rails 4 and ruby 2 or higher, these versions were used in this tutorial
+```console
+rails -v
+ruby -v
+```
+> Rails 4.0.0  
+> ruby 2.0.0p247 (2013-06-27 revision 41674) [x86_64-linux]
+
+<!-- 
+This tutorial walks you through construction of issue tracking application because best way to learn is by creating. Check out how the [application]() will look like at the end.
+
+TODO Overview - listing sections 
+Installation - you will learn how to install lepidlo to your application and basics of working with lepidlo.
+Nested resource - what it is and how it works and how you can use it
+Customize Project's show page
+Tagged issues with acts_as_taggabale
+Default query
+
+
+
+-->
+
+## First application with lepidlo
+<!-- TODO Example of finishing app -->
+
+In this tutorial you will create issue tracking application, let's start by creating new rails application and installing lepidlo.
+```console
+rails new lepidlo_tutorial
+cd lepidlo_tutorial
+```
+
+Then add lepidlo gem to the application and run bundle to install it with all its dependancies.
+> Gemfile:
+```ruby
+gem 'lepidlo'
+```
+
+```console
+bundle install
+```
+
+This will create a new lepidlo generator for us let's use it.
+```console
+rails g lepidlo:install
+```
+
+The lepidlo generator notices the absence of cancan and devise files and offers you running generator for them as well. Then you can use lepidlo template instead of basic application.html.erb.
+
+<!-- (TODO - see the screenshots below) -->
+<!-- TODO links to files on github -->
+<!-- TODO point to diff commit -->
+<!-- TODO seperate generators for cancan, devise and cancan -->
+Here is the summary of what generator did:
+* Added assets to ```application.js``` manifest file
+* Created new stylesheet ```app/assets/stylesheets/lepidlo_and_overrides.css```
+* Created new ability file ```app/models/ability.rb```
+* Added permissions for Filter to ability file
+* Added gems to ```Gemfile```
+* Created [settings file](https://github.com/binarylogic/settingslogic) ```/config/lepidlo-settings.yml```
+* Created new models Import and Filter and database tables for them in migrations
+* Created localization file ```/home/gabriel/projects/issue_tracker/config/locales/lepidlo.en.yml```
+* Created new resources controller
+* Replaced ```application.html.erb``` 
+* Created partials used in lepidlo's template
+* Added new [concern](http://guides.rubyonrails.org/routing.html#routing-concerns) to routes
+* Created initializers for rails_admin and dragonfly
+* Created new filters controller
+
+
+Last step in installation is to define inital ability in `app/models/ability.rb`. For now you can allow anybody to perform any action and then migrate database.
+> app/models/ability.rb:
+```ruby
+can :manage, :all
+```
+
+```console
+rake db:migrate
+```
+
+Everything is set up and ready to be used. Our application will need to track projects, which will have a lot of issues (has_many). Use scaffolding for that which is now modified by lepidlo.
+
+```console
+rails g scaffold Project name description:text start:date finish:date
+rails g scaffold Issue name description:text status:string resolution:string project:references user:references
+```
+
+Then migrate the database and run server.
+```console
+rake db:migrate
+rails s
+```
+<!-- TODO - screenshots of projects, issues (out of box) -->
+It looks nicer in comparision with basic scaffolding and it includes importing, exporting, breadcrumb, pagination through records, table columns are sortable. It supports searching and you can save filters (more about filters later).
+<!-- TODO routes -->
+
+After scaffolding your resources, you can customize fields used in individual actions by [Railsdmin DSL](https://github.com/sferik/rails_admin/wiki/Railsadmin-DSL)
+
+> app/models/project.rb:
+```ruby
+class Project < ActiveRecord::Base
+  has_many :issues, inverse_of: :project
+
+  rails_admin do
+    list do
+      # only fields name and finish will be displayed
+      field :name
+      field :finish
+    end
+
+    edit do
+      field :name
+      field :description, :wysihtml5
+      field :start
+      field :finish
+     end 
+
+     show do
+       field :name
+       field :description
+       field :start
+       field :finish
+     end 
+  end 
+end
+```
+
+
+> app/models/issue.rb:
+```ruby
+class Issue < ActiveRecord::Base
+  belongs_to :project, inverse_of: :issues
+end
+```
+<!-- TODO say about association -->
+
+IMPORTANT! Make sure that you define inverse_of option on has_one, has_many and belongs_to associations. It is necessary for correct functioning of **lepidlo**, see [Rails documentation](http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#label-Bi-directional+associations) for explaination.
+
+Notice that files for views are not generated (directories appp/views/projects and appp/views/issues are empty), but all RESTful actions are working correctly. It is because views iherit default look and you can easily override these defaults by creating appropriate files.
+
+Another difference is controllers which inherit from ResourcesController. Full inheritance hierarchy looks this way:
+```ruby
+ProjectsController < ResourcesController < lepidlo::BaseController < InheritedResources::Base
+```
+
+If you are not familiar with [InheritedResources](https://github.com/josevalim/inherited_resources), now is a time to take a look at [it](https://github.com/josevalim/inherited_resources).  
+
+[Lepidlo::BaseController](https://github.com/lksv/lepidlo/blob/master/app/controllers/lepidlo/base_controller.rb) adds to inherited resources:
+* strong parameters handling
+* ```options``` method
+* ```taggings``` method
+* ```build_resource``` method
+
+You do NOT need to define permitted parameters anymore. It is defined by RailsAdmin DSL, more precisely by what you set as visible in edit action. 
+> app/models/project.rb:
+```ruby
+class Project < ActiveRecord::Base
+  ...
+    edit do
+      field :name
+      field :description, :wysihtml5
+      field :start
+      field :finish
+     end 
+  ...
+end
+```
+
+This implicitly sets permitted params which could be written as:
+```ruby
+def permitted_params
+  params.permit(:project => [:name, :description, :start, :finish])
+end
+```
+You can override these implicit settings by creating this method in case you want it.
+
+## Nested Resource
+As you can read in [RailsGuides](http://guides.rubyonrails.org/routing.html#nested-resources) nested resource is a way how to express parent-children relationship in routes.
+In our application it make sense to nest issues to projects because they are logical children of projects.
+
+> config/routes.rb
+```ruby 
+resources :projects, concerns: :resourcable do
+  resources :issues, concerns: :resourcable
+end
+```
+
+You can use [belongs_to](https://github.com/josevalim/inherited_resources#belongs-to) to reflect this relationship in controller. And it ensures that:
+* nested resource is really present in parent resource
+* you have permission to access not just nested resource, but parent resource as well
+
+For example when an user enters url /projects/1/issues/2. In that case issue with id 2 must belong to project with id 1. 
+And it checks user permissions for project with id 1 because it could be a security vulnerability if user could read issues on project he has no permitted access.
+
+
+Option [optional](https://github.com/josevalim/inherited_resources#optional-belongs-to) allows to display issues independantly of parent resource. 
+
+> app/controllers/issues_controller.rb
+```ruby
+class IssuesController < ResourcesController
+  belongs_to :project, optional: true
+end
+```
+
+There is one more thing related to nested resource. When you are creating new project you may also want to create new issues. You need to explicitly allow this with [accepts_nested_attributes_for](http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html#method-i-accepts_nested_attributes_for) method.
+
+> app/models/project.rb
+```ruby
+class Project < ActiveRecord::Base
+  accepts_nested_attributes_for :issues
+  ...
+    edit do
+      field :name
+      field :description, :wysihtml5
+      field :start
+      field :finish
+      field :issues # display nested resource
+     end 
+  ...
+end
+```
+<!-- TODO screenshot of add issue -->
+## Default query
+Imagine that there are many (hundred) projects especially these which already ended and every time you enter project index you see these passed projects and you have to filter them. It would be better to change default query which is display all projects in order as they are in database (most of the time order in which they were created).
+And it is really simple to change this. 
+<!-- continue ransack -->
+Lepidlo uses [ransack](https://github.com/activerecord-hackery/ransack) but you can create your own filters. 
+Ransack uses [predicates](https://github.com/activerecord-hackery/ransack/wiki/Basic-Searching) for creating queries to database.
+Ransack uses q search param and lepidlo uses f.
+> /app/controllers/projects_controller.rb:
+```
+class ProjectsController < ResourcesController
+  default_query do
+    { "f[finish_gteq_or_null]" => Date.today, "f[start_lt_or_null]" => Date.today + 1.month }
+  end
+end
+```
+continue
+
+## Project show page
+
+Suppose I want to see on project show page all issues associated with that project. To do that you can customize default show page by creating appropriate view file. 
+
+You can use @project instance variable to output project's information or better render partials which will display project as it was defined in rails_admin's show block.
+> app/views/projects/show.html.erb:
+```rhtml
+<%= render 'header' %>
+<%= render 'show' %>
+```
+
+<!-- TODO - this is importnant how to emphasise this? -->
+Usually you want to display content the way it is defined in rails_admin [sections](https://github.com/sferik/rails_admin/wiki#sections) (e.g. show, list, edit, ...). There are defined helper methods for some of these sections
+which will use configuration from rails_admin block.
+
+```ruby
+edit_form_for(resource_or_chain, options = {})
+show_form_for(resource_or_chain)
+list_form_for(query_form)
+query_form_for(class_or_chain, scope, options = {})
+...
+```
+These methods returns content of section for specific resource let's call it instnce of form. Actually it is a instance of ```Lepidlo::Forms``` class. 
+Resource chain is a sequence (array) of resources in case of nested resources. You can see this sequence in a breadcrumb and you have also access to ```association_chain``` which is an empty array in project's show page. But if projects were nested resource for users e.g. url organization/3/users/2/projects/1 than ```association_chain``` would contain third organization object and second user.
+
+TODO - what is right name for collection withouth pagination
+In your views, you will get the following helpers:
+```ruby
+resource                       #=> @project
+collection                     #=> @projects (with pagination)
+collection_withouth_pagination #=> @projects (withouth pagination)
+resource_class                 #=> Project
+association_chain              #=> array of resources
+```
+As you might expect, collection, collection_withouth_pagination (@projects instance variable) is only available on index actions.
+
+
+So you can use ```show_form_for``` to get content (as in show page) of every issue in current project. For displaying you have to use ```form_render``` because ```render``` does not know how to render instances of lepidlo forms (in this case  ```Lepidlo::Forms::Show``` object). 
+
+> app/views/projects/show.html.erb:
+```rhtml
+<%= render 'header' %>
+<%= render 'show' %>
+
+<h3>Issues</h3>
+<% resource.issues.each do |issue| %>
+  <%= form_render show_form_for(issue) %>
+<% end %>
+```
+
+
+<!-- TODO small change to show_form to demonstrate customization -->
+
+
+<!-- This code can look little complicated so it does not matter if you do not understand we will talk more about it later.
+association_chain is in this case empty array because there is nothing before projects, take a look at breadcrump (projects), but we have for example users 1 project show than association_chain would contain users and it would be neccery for proper
+displaying of paths.
+We want to display it in list_form which needs ```Lepidlo::Forms::Query``` object that's why we call query on it. 
+TODO why duplicates
+ -->
+<!-- 
+TODO controller's options
+
+Dynamic attributes are way how to react to user input in forms and hide or show other fields
+example: 
+suppose you have subscription to access pro content form - 1 month, 3 months, 6 months, custom
+number of days: 
