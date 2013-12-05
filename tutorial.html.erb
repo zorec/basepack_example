@@ -1,5 +1,7 @@
+staci vymazat migracie nemusi tam vytvarat nove na vymazanie 
+
 TODO seperate generators for cancan, devise and cancan
-TODO collection_withouth pagination
+customization of view
 
 <!-- Questions and notes
 
@@ -11,7 +13,7 @@ questions inline tutorial
 haml or erb
 
 issuetracker demo app:
-new issue on project or withouth that? with that
+new issue on project or without that? with that
 globaly forbid id, created_at
 is it really just has_many association between version and issue
 yes
@@ -29,17 +31,16 @@ filter saving error
 rgrep dlhe a
 delete visited
 
-TODO - seed data
-TODO replace ```/ za ```
-TODO - format (convention), styling, check, spelling
-TODO - links
-TODO - you
-TODO - README SIMPLIFY
+TODO
+- questions for tutorial, contact, comments
+- railscasts links
+- seed data
+- replace ```/ za ```
+- format (convention), styling, check, spelling
+- links
+- you
+- README SIMPLIFY
 
-nested resource - explain nested resource (what is it)
-co je potreba pridat do routes.rb 
-co je potreba do controlleru - odkaz na inherited resources - https://github.com/josevalim/inherited_resources#belongs-to
-// kontroluje pristup k nadradenemu resource (vsetkym) a ci k nemu patri
 vyber select box - option, route
 advanced - zoznam pre nadradeney odkaz na dalsi
 
@@ -50,7 +51,7 @@ new action - assigne to me
 
 This tutorial is designed for learning lepidlo which is based on Ruby on Rails framework. So previous experience with Ruby on Rails is necessary you do not need to be an expert. For shorter introduction to lepidlo see [README] (https://github.com/lksv).  
 Lepidlo is a collection of gems (which are useful in any application) tied together with additional features on top of it. 
-So for easy start it is highly recommended that you are familiar with gems below (you have used them at least in one application) because these gems are essential part of lepidlo. If you are not familiar with them then you will find a lot of additional links to related sections during all tutorial.
+So for easy start it is highly recommended that you are familiar with gems below (you have used them at least in one application) because these gems are essential part of lepidlo. Although there is no need to worry if you do not know them you will be supplied with additional links to related sections through all tutorial. 
 * [Devise](ttps://github.com/plataformatec/devise)
 * [Cancan](https://github.com/ryanb/cancan.git)
 * [Rails_admin](https://github.com/sferik/rails_admin) (especially [rails_admin DSL](https://github.com/sferik/rails_admin/wiki/Railsadmin-DSL))
@@ -77,9 +78,9 @@ This tutorial walks you through construction of issue tracking application becau
 TODO Overview - listing sections 
 Installation - you will learn how to install lepidlo to your application and basics of working with lepidlo.
 Nested resource - what it is and how it works and how you can use it
-Customize Project's show page
-Tagged issues with acts_as_taggabale
 Default query
+Tagged issues with acts_as_taggabale
+Customize Project's show page
 
 
 
@@ -214,6 +215,7 @@ If you are not familiar with [InheritedResources](https://github.com/josevalim/i
 * ```options``` method
 * ```taggings``` method
 * ```build_resource``` method
+<!-- continue -->
 
 You do NOT need to define permitted parameters anymore. It is defined by RailsAdmin DSL, more precisely by what you set as visible in edit action. 
 > app/models/project.rb:
@@ -242,7 +244,7 @@ You can override these implicit settings by creating this method in case you wan
 As you can read in [RailsGuides](http://guides.rubyonrails.org/routing.html#nested-resources) nested resource is a way how to express parent-children relationship in routes.
 In our application it make sense to nest issues to projects because they are logical children of projects.
 
-> config/routes.rb
+> config/routes.rb:
 ```ruby 
 resources :projects, concerns: :resourcable do
   resources :issues, concerns: :resourcable
@@ -259,7 +261,7 @@ And it checks user permissions for project with id 1 because it could be a secur
 
 Option [optional](https://github.com/josevalim/inherited_resources#optional-belongs-to) allows to display issues independantly of parent resource. 
 
-> app/controllers/issues_controller.rb
+> app/controllers/issues_controller.rb:
 ```ruby
 class IssuesController < ResourcesController
   belongs_to :project, optional: true
@@ -268,7 +270,7 @@ end
 
 There is one more thing related to nested resource. When you are creating new project you may also want to create new issues. You need to explicitly allow this with [accepts_nested_attributes_for](http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html#method-i-accepts_nested_attributes_for) method.
 
-> app/models/project.rb
+> app/models/project.rb:
 ```ruby
 class Project < ActiveRecord::Base
   accepts_nested_attributes_for :issues
@@ -283,23 +285,33 @@ class Project < ActiveRecord::Base
   ...
 end
 ```
+
 <!-- TODO screenshot of add issue -->
 ## Default query
-Imagine that there are many (hundred) projects especially these which already ended and every time you enter project index you see these passed projects and you have to filter them. It would be better to change default query which is display all projects in order as they are in database (most of the time order in which they were created).
-And it is really simple to change this. 
+Imagine that there were many (hundred) projects especially these which already ended and every time you enter project index you see these passed projects and you have to search within them. It would be better to change default query which is currently just display all projects in order as they are in database (most of the time it is order in which they were created).
 <!-- continue ransack -->
-Lepidlo uses [ransack](https://github.com/activerecord-hackery/ransack) but you can create your own filters. 
-Ransack uses [predicates](https://github.com/activerecord-hackery/ransack/wiki/Basic-Searching) for creating queries to database.
-Ransack uses q search param and lepidlo uses f.
-> /app/controllers/projects_controller.rb:
+
+And if you are familiar with [ransack](https://github.com/activerecord-hackery/ransack) it is really simple to change this default query. You just need to call method ```default_query``` in appropriate controller, which returns a hash of parameters for search. 
+Lepidlo uses ransack under hood uses, but you have to use ```f``` as a default param key for search (instead of ```q```)
+
+> app/controllers/projects_controller.rb:
 ```
 class ProjectsController < ResourcesController
   default_query do
-    { "f[finish_gteq_or_null]" => Date.today, "f[start_lt_or_null]" => Date.today + 1.month }
+    { # display projects which end today or later
+      "f[end_not_lt]" => Date.today,
+
+      # do not display projects which start after month
+      "f[start_lt]" => Date.today + 1.month 
+    }
   end
 end
 ```
-continue
+
+In case you have not worked with ransack you can watch [railscast episode](http://railscasts.com/episodes/370-ransack) by Ryan Bates for great introduction. Or you can reading (next chapters do not require that) and come back to it later.
+<!-- Taggings -->
+<!-- continue -->
+<!-- SEARCH param -->
 
 ## Project show page
 
@@ -326,16 +338,15 @@ query_form_for(class_or_chain, scope, options = {})
 These methods returns content of section for specific resource let's call it instnce of form. Actually it is a instance of ```Lepidlo::Forms``` class. 
 Resource chain is a sequence (array) of resources in case of nested resources. You can see this sequence in a breadcrumb and you have also access to ```association_chain``` which is an empty array in project's show page. But if projects were nested resource for users e.g. url organization/3/users/2/projects/1 than ```association_chain``` would contain third organization object and second user.
 
-TODO - what is right name for collection withouth pagination
 In your views, you will get the following helpers:
 ```ruby
 resource                       #=> @project
 collection                     #=> @projects (with pagination)
-collection_withouth_pagination #=> @projects (withouth pagination)
+collection_without_pagination  #=> @projects (without pagination)
 resource_class                 #=> Project
 association_chain              #=> array of resources
 ```
-As you might expect, collection, collection_withouth_pagination (@projects instance variable) is only available on index actions.
+As you might expect, collection, collection_without_pagination (@projects instance variable) is only available on index actions.
 
 
 So you can use ```show_form_for``` to get content (as in show page) of every issue in current project. For displaying you have to use ```form_render``` because ```render``` does not know how to render instances of lepidlo forms (in this case  ```Lepidlo::Forms::Show``` object). 
@@ -350,7 +361,6 @@ So you can use ```show_form_for``` to get content (as in show page) of every iss
   <%= form_render show_form_for(issue) %>
 <% end %>
 ```
-
 
 <!-- TODO small change to show_form to demonstrate customization -->
 

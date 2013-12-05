@@ -1,15 +1,29 @@
 <%= render 'header' %>
 <%= render 'show' %>
 
+  
 <% if resource.comments.any? %>
-  <ul>
-    <% resource.comments.each do |c| %>
-      <li><%= c.comment %></li>
-    <% end %> 
-  </ul>
+  <h3>Comments</h3>
+  
+  <div class="comments form-show">
+    <dl class="dl-horizontal">
+      
+      <% resource.comments.each do |c| %>
+        <dt><%= (c.user) ? c.user : "Anonymous"   %></dt>
+        <dd><%= c.comment %></dd>
+      <% end %>
+    </dl>
+    
+    <dl class="dl-horizontal">  
+      <dt>Add comment to issue</dt>
+      <dd>
+        <%= simple_form_for [resource, Comment.new] do |f| %>
+          <%= f.input :comment, as: :text %>
+          <%= f.button :submit, "Comment" %>
+        <% end %>
+      </dd>
+    </dl>
+  </div>
+
 <% end %>
 
-<%= simple_form_for [resource, Comment.new] do |f| %>
-  <%= f.input :comment, as: :text %>
-  <%= f.button :submit, "Comment on issue" %>
-<% end %>

@@ -27,6 +27,8 @@ class User < ActiveRecord::Base
 
   def to_label
     labelize do
+      # do not show email address
+      # email[0...email.index("@")]
       email
     end
   end

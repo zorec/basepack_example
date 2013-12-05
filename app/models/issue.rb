@@ -24,7 +24,7 @@ class Issue < ActiveRecord::Base
   acts_as_taggable
   
   rails_admin do
-    exclude_fields :base_tags, :id, :created_at, :updated_at
+    exclude_fields :base_tags, :id, :created_at, :updated_at, :comments
     
     list do
       # display issue's name as a link
