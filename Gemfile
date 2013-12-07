@@ -65,4 +65,18 @@ gem "delayed_job_active_record", ">= 4.0.0.beta2"
 gem "strip_attributes", "~> 1.2"
 
 
-gem "annotate", group: [:development]
+group :development do
+  # gem 'guard-spork', '~> 1.5.1'
+  # gem 'spork-rails', github: 'sporkrb/spork-rails'
+  # gem 'rb-fsevent', '~> 0.9.3'
+
+  gem 'pry-rails'
+  gem 'pry', '~> 0.9.10'
+  gem 'pry-doc'
+  gem 'rails_panel'
+  gem 'better_errors'
+  gem 'annotate'
+  gem 'binding_of_caller'
+  gem 'meta_request'
+  gem 'rails-erd'
+end

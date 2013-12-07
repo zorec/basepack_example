@@ -24,9 +24,13 @@ class Issue < ActiveRecord::Base
   acts_as_taggable
   
   rails_admin do
-    exclude_fields :base_tags, :id, :created_at, :updated_at, :comments
-    
+    exclude_fields :tag_list, :tags, :base_tags, :id, :created_at, :updated_at, :comments
+    show do
+      include_fields :tags
+    end
+
     list do
+
       # display issue's name as a link
       # field :name do
       #   formatted_value do
@@ -36,7 +40,7 @@ class Issue < ActiveRecord::Base
       # end
       # field :status, :enum
       # field :resolution, :enum
-      exclude_fields :tags, :tag_list, :project
+      exclude_fields :project
     end
 
     edit do
@@ -75,7 +79,6 @@ class Issue < ActiveRecord::Base
       field :tag_list do
         partial 'tag_list_with_suggestions'
       end
-      exclude_fields :tags
     end
   end
 

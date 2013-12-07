@@ -1,6 +1,11 @@
 class ProjectsController < ResourcesController
 
   default_query do
-    { "f[end_gteq_or_null]" => Date.today, "f[start_lt_or_null]" => Date.today + 1.month }
+    { # display projects which haven't ended yet (end today or later)
+      "f[end_gteq_null]" => Date.today,
+
+      # sorted by start of project 
+      "f[s]" => 'start asc'
+    }
   end
 end

@@ -1,4 +1,17 @@
-staci vymazat migracie nemusi tam vytvarat nove na vymazanie 
+testing:
+! nahodne poradie to rozbije testy
+
+- staci vymazat migracie nemusi tam vytvarat nove na vymazanie
+- pridat vsetky asociacie habtm?
+- pridat has_one employee?
+
+- betterspec - bez controller testov?
+- factoryGirl shorten syntax
+- it show vs. shows
+- polymorphic objects https://github.com/sferik/rails_admin/blob/master/spec/integration/basic/show/rails_admin_basic_show_spec.rb
+- 
+
+
 
 TODO seperate generators for cancan, devise and cancan
 customization of view
@@ -32,6 +45,7 @@ rgrep dlhe a
 delete visited
 
 TODO
+- diff to see have little code we have to add
 - questions for tutorial, contact, comments
 - railscasts links
 - seed data
@@ -80,6 +94,7 @@ Installation - you will learn how to install lepidlo to your application and bas
 Nested resource - what it is and how it works and how you can use it
 Default query
 Tagged issues with acts_as_taggabale
+cancan 
 Customize Project's show page
 
 
@@ -215,7 +230,7 @@ If you are not familiar with [InheritedResources](https://github.com/josevalim/i
 * ```options``` method
 * ```taggings``` method
 * ```build_resource``` method
-<!-- continue -->
+* ...
 
 You do NOT need to define permitted parameters anymore. It is defined by RailsAdmin DSL, more precisely by what you set as visible in edit action. 
 > app/models/project.rb:
@@ -289,29 +304,112 @@ end
 <!-- TODO screenshot of add issue -->
 ## Default query
 Imagine that there were many (hundred) projects especially these which already ended and every time you enter project index you see these passed projects and you have to search within them. It would be better to change default query which is currently just display all projects in order as they are in database (most of the time it is order in which they were created).
-<!-- continue ransack -->
 
 And if you are familiar with [ransack](https://github.com/activerecord-hackery/ransack) it is really simple to change this default query. You just need to call method ```default_query``` in appropriate controller, which returns a hash of parameters for search. 
-Lepidlo uses ransack under hood uses, but you have to use ```f``` as a default param key for search (instead of ```q```)
+Lepidlo uses ransack under hood uses, but you have to use ```f``` as a default param key for search (instead of ```q```) and for searching use ```f[s]```.
 
 > app/controllers/projects_controller.rb:
 ```
 class ProjectsController < ResourcesController
   default_query do
-    { # display projects which end today or later
-      "f[end_not_lt]" => Date.today,
+    { # display projects which haven't ended yet (end today or later)
+      "f[end_gteq_null]" => Date.today,
 
-      # do not display projects which start after month
-      "f[start_lt]" => Date.today + 1.month 
+      # sorted by start of project 
+      "f[s]" => 'start asc'
     }
   end
 end
 ```
 
 In case you have not worked with ransack you can watch [railscast episode](http://railscasts.com/episodes/370-ransack) by Ryan Bates for great introduction. Or you can reading (next chapters do not require that) and come back to it later.
-<!-- Taggings -->
+
+## Tagged issues
+In this chapter you will give user possibility to add tags to issues with [acts-as-taggable-on](https://github.com/mbleigh/acts-as-taggable-on) gem so first step is straightforward.
+
+> Gemfile:
+```ruby
+gem "acts-as-taggable-on"
+```
+
+<!-- continue -
+It does not make options request(issuescontroller#taggings) it handles all routes?
+
+Where is partial from?
+
+LUKAS - base_tags is synonymum for tags?
+
+tags resource routes and controller are optional?
+  -->
+
+Then follow post installation [instructions](https://github.com/mbleigh/acts-as-taggable-on#post-installation) and create migration by generator and migrate the database: 
+```console
+rails g acts_as_taggable_on:migration
+rake db:migrate
+```
+
+The created model is located in different namespace that means that lepidlo will not detect it automatically and you have to include it manually in the rails_admin configuration file.
+> config/initializers/rails_admin.rb:
+```ruby
+config.included_models = Lepidlo::Utils.detect_models + ['ActsAsTaggableOn::Tag']
+```
+
+Mark issues model as taggabale with ```acts_as_taggable``` which will provide new virtual attributes for setting (tag_list=) and retrieving(tags, base_tags) tags as specified in [usage section](https://github.com/mbleigh/acts-as-taggable-on#usage)
+These virtual attributes are displayed as fields(Tags, Tag list, Base list) which are visible by default. You can exclude them at beginning and include them where you want. 
+
+> app/models/issues.rb
+```ruby
+class Issue < ActiveRecord::Base
+  ...
+  acts_as_taggable
+
+  rails_admin do
+    exclude_fields :base_tags, :tags, :tag_list
+
+    # display tags in show actions
+    show do
+      include_fields :tags
+    end
+
+    edit do
+      # tags entered in comma separated syntax
+      field :tag_list
+    end
+  end
+end
+```
+
+To make it even better render the tag_list field with lepidlo's partial which uses select2 and provides autocompletion by making ajax calls to taggings method on particular controller (IssuesController in this case)
+
+> app/models/issues.rb
+```ruby 
+  edit do
+    # tags entered in comma separated syntax
+    field :tag_list
+  end
+```
+
+If you want you can enable actions for ActsAsTaggableOn::Tag model
+
+It will display links and 
+
+
+> routes.rb
+```ruby
+  resources :acts_as_taggable_on_tags, :filters, concerns: :resourcable
+```
+
+You need to create controller to properly handle all routes.
+> app/controllers/acts_as_taggable_on_tags_controller.rb
+```ruby
+class ActsAsTaggableOnTagsController < ResourcesController
+  # LUKAS
+  defaults resource_class: ActsAsTaggableOn::Tag
+end
+
 <!-- continue -->
-<!-- SEARCH param -->
+
+
 
 ## Project show page
 

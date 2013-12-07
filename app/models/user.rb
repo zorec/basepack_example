@@ -32,4 +32,13 @@ class User < ActiveRecord::Base
       email
     end
   end
+
+  # after_initialize do
+  #   if self.new_record?
+  #     # values will be available for new record forms.
+  #     self.user_id = 1
+
+  #     User.find_or_create_by(email: "Anonymous") 
+  #   end
+  # end
 end
