@@ -56,11 +56,13 @@ class Project < ActiveRecord::Base
       field :description
       field :start
       field :end
-      field :user do
-        visible false
-      end
+      # field :user_id, :hidden do
+      #   default_value do
+      #     bindings[:view]._current_user.id
+      #   end
+      # end
       field :versions
-      exclude_fields :tags
+      exclude_fields :tags, :user
     end
   end
 end

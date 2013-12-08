@@ -46,7 +46,7 @@ delete visited
 
 TODO
 - diff to see have little code we have to add
-- questions for tutorial, contact, comments
+- questions for tutorial, contact, comments - google group?
 - railscasts links
 - seed data
 - replace ```/ za ```
@@ -389,25 +389,24 @@ To make it even better render the tag_list field with lepidlo's partial which us
   end
 ```
 
-If you want you can enable actions for ActsAsTaggableOn::Tag model
-
-It will display links and 
-
+If you want you can enable actions (new, edit, show, ...) for ActsAsTaggableOn::Tag model just add routes for these actions.
 
 > routes.rb
 ```ruby
   resources :acts_as_taggable_on_tags, :filters, concerns: :resourcable
 ```
 
-You need to create controller to properly handle all routes.
+And create controller to properly handle all routes.
 > app/controllers/acts_as_taggable_on_tags_controller.rb
 ```ruby
 class ActsAsTaggableOnTagsController < ResourcesController
-  # LUKAS
+  # LUKAS why is not displaying correctly?
+  # to use correct model name see https://github.com/josevalim/inherited_resources#overwriting-defaults
   defaults resource_class: ActsAsTaggableOn::Tag
 end
 
 <!-- continue -->
+<!-- Dynamic attributes -->
 
 
 
