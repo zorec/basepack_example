@@ -1,71 +1,11 @@
-testing:
-! nahodne poradie to rozbije testy
-
-- staci vymazat migracie nemusi tam vytvarat nove na vymazanie
-- pridat vsetky asociacie habtm?
-- pridat has_one employee?
-
-- betterspec - bez controller testov?
-- factoryGirl shorten syntax
-- it show vs. shows
-- polymorphic objects https://github.com/sferik/rails_admin/blob/master/spec/integration/basic/show/rails_admin_basic_show_spec.rb
-- 
-
-
-
-TODO seperate generators for cancan, devise and cancan
-customization of view
-
-<!-- Questions and notes
-
-iterative style? (migration) or explain database schema at beginning?
-later 
-
-conflicts with wiki, readme(shorter version of that?)
-questions inline tutorial
-haml or erb
-
-issuetracker demo app:
-new issue on project or without that? with that
-globaly forbid id, created_at
-is it really just has_many association between version and issue
-yes
-what else is needed in system? (namespaces)
-label on issue status
-not necessary
-
- -->
-
-
-Lepidlo enhancment:
-ideas - save default query:
-Layouts should be added only when answered true to remove application.html.erb
-filter saving error
-rgrep dlhe a
-delete visited
-
-TODO
-- diff to see have little code we have to add
-- questions for tutorial, contact, comments - google group?
-- railscasts links
-- seed data
-- replace ```/ za ```
-- format (convention), styling, check, spelling
-- links
-- you
-- README SIMPLIFY
-
-vyber select box - option, route
-advanced - zoznam pre nadradeney odkaz na dalsi
-
-tagging chapters http://docs.angularjs.org/
-new action - assigne to me
-
 ## Introduction
 
-This tutorial is designed for learning lepidlo which is based on Ruby on Rails framework. So previous experience with Ruby on Rails is necessary you do not need to be an expert. For shorter introduction to lepidlo see [README] (https://github.com/lksv).  
+This tutorial is designed for learning lepidlo which is based on Ruby on Rails framework. So previous experience with Ruby on Rails is necessary but you do not need to be an expert. There is the [README] (https://github.com/lksv) for shorter introduction and demonstration of lepidlo.  
+
 Lepidlo is a collection of gems (which are useful in any application) tied together with additional features on top of it. 
-So for easy start it is highly recommended that you are familiar with gems below (you have used them at least in one application) because these gems are essential part of lepidlo. Although there is no need to worry if you do not know them you will be supplied with additional links to related sections through all tutorial. 
+Installing lepidlo's gem really enhances the power of Ruby on Rails. And remember you can still use everything what development in Ruby on Rails provides. For example use lepidlo's features only in parts of application.
+
+For easy start it is highly recommended that you are familiar with gems below (you have used them at least in one application) because these gems are essential part of lepidlo. Although there is no need to worry if you do not know them you will be supplied with additional links to related sections through all tutorial. 
 * [Devise](ttps://github.com/plataformatec/devise)
 * [Cancan](https://github.com/ryanb/cancan.git)
 * [Rails_admin](https://github.com/sferik/rails_admin) (especially [rails_admin DSL](https://github.com/sferik/rails_admin/wiki/Railsadmin-DSL))
@@ -78,7 +18,7 @@ And being familiar with these may also help:
 * [Kaminari](https://github.com/amatsuda/kaminari)
 * [bootstrap-sass](https://github.com/thomas-mcdonald/bootstrap-sass)
 
-The lepidlo requires rails 4 and ruby 2 or higher, these versions were used in this tutorial
+The lepidlo requires rails 4 and ruby 2 or higher, these versions were used in this tutorial.
 ```console
 rails -v
 ruby -v
@@ -87,24 +27,22 @@ ruby -v
 > ruby 2.0.0p247 (2013-06-27 revision 41674) [x86_64-linux]
 
 <!-- 
-This tutorial walks you through construction of issue tracking application because best way to learn is by creating. Check out how the [application]() will look like at the end.
-
 TODO Overview - listing sections 
+This tutorial walks you through construction of issue tracking application because best way to learn is by creating. Check out how the [application](TODO finished application) will look like at the end.
+
 Installation - you will learn how to install lepidlo to your application and basics of working with lepidlo.
 Nested resource - what it is and how it works and how you can use it
-Default query
+Default query - what is it and how to set it.
 Tagged issues with acts_as_taggabale
-cancan 
+Cancan 
 Customize Project's show page
-
-
+Namespaces
 
 -->
 
 ## First application with lepidlo
-<!-- TODO Example of finishing app -->
 
-In this tutorial you will create issue tracking application, let's start by creating new rails application and installing lepidlo.
+In this tutorial you will create issue tracking application, let's start by creating new rails application.
 ```console
 rails new lepidlo_tutorial
 cd lepidlo_tutorial
@@ -120,14 +58,16 @@ gem 'lepidlo'
 bundle install
 ```
 
-This will create a new lepidlo generator for us let's use it.
+This will create a new lepidlo generator for us let's use it right away.
 ```console
 rails g lepidlo:install
 ```
 
-The lepidlo generator notices the absence of cancan and devise files and offers you running generator for them as well. Then you can use lepidlo template instead of basic application.html.erb.
+The lepidlo generator notices the absence of cancan and devise files and offers you running generator for them as well.
 
+Then it asks for confirmation to remove application.html.erb in order to use own application.html.haml with related partials (header, navigation, etc.). You can see how it looks in demo application.
 <!-- (TODO - see the screenshots below) -->
+
 <!-- TODO links to files on github -->
 <!-- TODO point to diff commit -->
 <!-- TODO seperate generators for cancan, devise and cancan -->
@@ -137,9 +77,9 @@ Here is the summary of what generator did:
 * Created new ability file ```app/models/ability.rb```
 * Added permissions for Filter to ability file
 * Added gems to ```Gemfile```
-* Created [settings file](https://github.com/binarylogic/settingslogic) ```/config/lepidlo-settings.yml```
+* Created [settings file](https://github.com/binarylogic/settingslogic) ```config/lepidlo-settings.yml```
 * Created new models Import and Filter and database tables for them in migrations
-* Created localization file ```/home/gabriel/projects/issue_tracker/config/locales/lepidlo.en.yml```
+* Created localization file ```config/locales/lepidlo.en.yml```
 * Created new resources controller
 * Replaced ```application.html.erb``` 
 * Created partials used in lepidlo's template
@@ -158,7 +98,7 @@ can :manage, :all
 rake db:migrate
 ```
 
-Everything is set up and ready to be used. Our application will need to track projects, which will have a lot of issues (has_many). Use scaffolding for that which is now modified by lepidlo.
+Everything is set up and ready to be used. Our application will need to track projects, which will have a lot of issues (has_many). Use scaffolding to create these resources. Functionality of scaffolding has been modified by lepidlo.
 
 ```console
 rails g scaffold Project name description:text start:date finish:date
@@ -171,10 +111,10 @@ rake db:migrate
 rails s
 ```
 <!-- TODO - screenshots of projects, issues (out of box) -->
-It looks nicer in comparision with basic scaffolding and it includes importing, exporting, breadcrumb, pagination through records, table columns are sortable. It supports searching and you can save filters (more about filters later).
+In comparision with basic scaffolding it includes importing, exporting of resources, pagination through records, breadcrumb table columns are sortable. It supports searching and you can save filters (more about filters later).
 <!-- TODO routes -->
 
-After scaffolding your resources, you can customize fields used in individual actions by [Railsdmin DSL](https://github.com/sferik/rails_admin/wiki/Railsadmin-DSL)
+After scaffolding your resources, you can customize fields used in individual actions by [Railsdmin DSL](https://github.com/sferik/rails_admin/wiki/Railsadmin-DSL).
 
 > app/models/project.rb:
 ```ruby
@@ -183,13 +123,14 @@ class Project < ActiveRecord::Base
 
   rails_admin do
     list do
-      # only fields name and finish will be displayed
+      # only these fields(name, finish) will be displayed in this order
       field :name
       field :finish
     end
 
     edit do
       field :name
+      # add rich text editor as a field type
       field :description, :wysihtml5
       field :start
       field :finish
@@ -213,26 +154,27 @@ class Issue < ActiveRecord::Base
 end
 ```
 <!-- TODO say about association -->
+<!-- wysihtml5 -->
 
 IMPORTANT! Make sure that you define inverse_of option on has_one, has_many and belongs_to associations. It is necessary for correct functioning of **lepidlo**, see [Rails documentation](http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#label-Bi-directional+associations) for explaination.
 
-Notice that files for views are not generated (directories appp/views/projects and appp/views/issues are empty), but all RESTful actions are working correctly. It is because views iherit default look and you can easily override these defaults by creating appropriate files.
+Notice that files for views are not generated (directories appp/views/projects and appp/views/issues are empty), but all RESTful(index, show, new, create, edit, update, destroy) actions are working correctly. It is because views iherit default look and you can easily override these defaults by creating appropriate files.
 
 Another difference is controllers which inherit from ResourcesController. Full inheritance hierarchy looks this way:
 ```ruby
-ProjectsController < ResourcesController < lepidlo::BaseController < InheritedResources::Base
+ProjectsController < ResourcesController < Lepidlo::BaseController < InheritedResources::Base
 ```
 
 If you are not familiar with [InheritedResources](https://github.com/josevalim/inherited_resources), now is a time to take a look at [it](https://github.com/josevalim/inherited_resources).  
 
 [Lepidlo::BaseController](https://github.com/lksv/lepidlo/blob/master/app/controllers/lepidlo/base_controller.rb) adds to inherited resources:
-* strong parameters handling
+* defining strong parameters
 * ```options``` method
 * ```taggings``` method
 * ```build_resource``` method
 * ...
 
-You do NOT need to define permitted parameters anymore. It is defined by RailsAdmin DSL, more precisely by what you set as visible in edit action. 
+It will be disscussed later in tutorial except defining strong parameters. You just neeed to know that you don't have to define permitted parameters anymore. It is defined by RailsAdmin DSL, more precisely by what you set as visible in edit action. 
 > app/models/project.rb:
 ```ruby
 class Project < ActiveRecord::Base
@@ -302,113 +244,6 @@ end
 ```
 
 <!-- TODO screenshot of add issue -->
-## Default query
-Imagine that there were many (hundred) projects especially these which already ended and every time you enter project index you see these passed projects and you have to search within them. It would be better to change default query which is currently just display all projects in order as they are in database (most of the time it is order in which they were created).
-
-And if you are familiar with [ransack](https://github.com/activerecord-hackery/ransack) it is really simple to change this default query. You just need to call method ```default_query``` in appropriate controller, which returns a hash of parameters for search. 
-Lepidlo uses ransack under hood uses, but you have to use ```f``` as a default param key for search (instead of ```q```) and for searching use ```f[s]```.
-
-> app/controllers/projects_controller.rb:
-```
-class ProjectsController < ResourcesController
-  default_query do
-    { # display projects which haven't ended yet (end today or later)
-      "f[end_gteq_null]" => Date.today,
-
-      # sorted by start of project 
-      "f[s]" => 'start asc'
-    }
-  end
-end
-```
-
-In case you have not worked with ransack you can watch [railscast episode](http://railscasts.com/episodes/370-ransack) by Ryan Bates for great introduction. Or you can reading (next chapters do not require that) and come back to it later.
-
-## Tagged issues
-In this chapter you will give user possibility to add tags to issues with [acts-as-taggable-on](https://github.com/mbleigh/acts-as-taggable-on) gem so first step is straightforward.
-
-> Gemfile:
-```ruby
-gem "acts-as-taggable-on"
-```
-
-<!-- continue -
-It does not make options request(issuescontroller#taggings) it handles all routes?
-
-Where is partial from?
-
-LUKAS - base_tags is synonymum for tags?
-
-tags resource routes and controller are optional?
-  -->
-
-Then follow post installation [instructions](https://github.com/mbleigh/acts-as-taggable-on#post-installation) and create migration by generator and migrate the database: 
-```console
-rails g acts_as_taggable_on:migration
-rake db:migrate
-```
-
-The created model is located in different namespace that means that lepidlo will not detect it automatically and you have to include it manually in the rails_admin configuration file.
-> config/initializers/rails_admin.rb:
-```ruby
-config.included_models = Lepidlo::Utils.detect_models + ['ActsAsTaggableOn::Tag']
-```
-
-Mark issues model as taggabale with ```acts_as_taggable``` which will provide new virtual attributes for setting (tag_list=) and retrieving(tags, base_tags) tags as specified in [usage section](https://github.com/mbleigh/acts-as-taggable-on#usage)
-These virtual attributes are displayed as fields(Tags, Tag list, Base list) which are visible by default. You can exclude them at beginning and include them where you want. 
-
-> app/models/issues.rb
-```ruby
-class Issue < ActiveRecord::Base
-  ...
-  acts_as_taggable
-
-  rails_admin do
-    exclude_fields :base_tags, :tags, :tag_list
-
-    # display tags in show actions
-    show do
-      include_fields :tags
-    end
-
-    edit do
-      # tags entered in comma separated syntax
-      field :tag_list
-    end
-  end
-end
-```
-
-To make it even better render the tag_list field with lepidlo's partial which uses select2 and provides autocompletion by making ajax calls to taggings method on particular controller (IssuesController in this case)
-
-> app/models/issues.rb
-```ruby 
-  edit do
-    # tags entered in comma separated syntax
-    field :tag_list
-  end
-```
-
-If you want you can enable actions (new, edit, show, ...) for ActsAsTaggableOn::Tag model just add routes for these actions.
-
-> routes.rb
-```ruby
-  resources :acts_as_taggable_on_tags, :filters, concerns: :resourcable
-```
-
-And create controller to properly handle all routes.
-> app/controllers/acts_as_taggable_on_tags_controller.rb
-```ruby
-class ActsAsTaggableOnTagsController < ResourcesController
-  # LUKAS why is not displaying correctly?
-  # to use correct model name see https://github.com/josevalim/inherited_resources#overwriting-defaults
-  defaults resource_class: ActsAsTaggableOn::Tag
-end
-
-<!-- continue -->
-<!-- Dynamic attributes -->
-
-
 
 ## Project show page
 
@@ -445,8 +280,7 @@ association_chain              #=> array of resources
 ```
 As you might expect, collection, collection_without_pagination (@projects instance variable) is only available on index actions.
 
-
-So you can use ```show_form_for``` to get content (as in show page) of every issue in current project. For displaying you have to use ```form_render``` because ```render``` does not know how to render instances of lepidlo forms (in this case  ```Lepidlo::Forms::Show``` object). 
+That means you can use ```show_form_for``` to get the same content as in show page of every issue in current project. For displaying you have to use ```form_render``` because ```render``` does not know how to render instances of lepidlo forms (in this case  ```Lepidlo::Forms::Show``` object). 
 
 > app/views/projects/show.html.erb:
 ```rhtml
@@ -466,12 +300,363 @@ So you can use ```show_form_for``` to get content (as in show page) of every iss
 association_chain is in this case empty array because there is nothing before projects, take a look at breadcrump (projects), but we have for example users 1 project show than association_chain would contain users and it would be neccery for proper
 displaying of paths.
 We want to display it in list_form which needs ```Lepidlo::Forms::Query``` object that's why we call query on it. 
-TODO why duplicates
+ 
  -->
-<!-- 
-TODO controller's options
 
-Dynamic attributes are way how to react to user input in forms and hide or show other fields
-example: 
-suppose you have subscription to access pro content form - 1 month, 3 months, 6 months, custom
-number of days: 
+## Default query
+Imagine that there were many (hundred) projects especially these which already ended and every time you enter project index you see these passed projects and you have to search within them. It would be better to change default query which is currently just display all projects in order as they are in database (most of the time it is order in which they were created).
+
+And if you are familiar with [ransack](https://github.com/activerecord-hackery/ransack) it is really simple to change this default query. You just need to call method ```default_query``` in appropriate controller, which returns a hash of parameters for search. 
+Lepidlo uses ransack under hood uses, but you have to use ```f``` as a default param key for search (instead of ```q```) and for searching use ```f[s]```.
+
+> app/controllers/projects_controller.rb:
+```
+class ProjectsController < ResourcesController
+  default_query do
+    { # display projects which haven't ended yet (end today or later)
+      "f[end_gteq_null]" => Date.today,
+
+      # sorted by start of project 
+      "f[s]" => 'start asc'
+    }
+  end
+end
+```
+
+In case you have not worked with ransack you can watch [railscast episode](http://railscasts.com/episodes/370-ransack) by Ryan Bates for great introduction.
+
+## Tagged issues
+In this chapter you will give user possibility to add tags to issues with [acts-as-taggable-on](https://github.com/mbleigh/acts-as-taggable-on) gem so first step is straightforward.
+
+> Gemfile:
+```ruby
+gem "acts-as-taggable-on"
+```
+
+<!-- 
+It does not make options request(issuescontroller#taggings) it handles all routes?
+Where is partial from?
+  -->
+
+Then follow post installation [instructions](https://github.com/mbleigh/acts-as-taggable-on#post-installation) and create migration by generator and migrate the database: 
+```console
+rails g acts_as_taggable_on:migration
+rake db:migrate
+```
+
+The created model is located in different namespace which means lepidlo will not detect it automatically and you have to include it manually in the rails_admin configuration file.
+> config/initializers/rails_admin.rb:
+```ruby
+config.included_models = Lepidlo::Utils.detect_models + ['ActsAsTaggableOn::Tag']
+```
+Mark issues model as taggabale with ```acts_as_taggable``` which will provide new methods for working with tags as specified in [usage section](https://github.com/mbleigh/acts-as-taggable-on#usage). 
+
+Especially interesting is method ```tag_list=``` for setting tags and ```tag_list``` for retrieving tags. It is enough just to display tag_list field and you are done.
+Actually almost done because associations added by ```acts_as_taggable``` to make it work are also displayed as fields (Tags, Base list) so can exclude them at beginning.
+
+> app/models/issues.rb
+```ruby
+class Issue < ActiveRecord::Base
+  ...
+  acts_as_taggable
+
+  rails_admin do
+    exclude_fields :base_tags, :tags
+
+    # display tags in show actions
+    show do
+      include_fields :tag_list
+    end
+
+    edit do
+      # tags entered in comma separated syntax
+      field :tag_list
+    end
+  end
+end
+```
+
+To make it even better render the tag_list field with lepidlo's [partial](https://github.com/lksv/lepidlo/blob/master/app/views/forms/edit/_tag_list_with_suggestions.html.haml?source=c) which uses select2 and provides autocompletion by making ajax calls to taggings method of particular controller (IssuesController in this case)
+
+> app/models/issues.rb
+```ruby 
+  edit do
+    # tags entered in comma separated syntax
+    field :tag_list
+  end
+```
+
+If you want you can enable actions (new, edit, show, ...) for ActsAsTaggableOn::Tag model just add routes for these actions.
+
+> routes.rb
+```ruby
+  resources :acts_as_taggable_on_tags, :filters, concerns: :resourcable
+```
+
+And create controller to properly handle all routes.
+> app/controllers/acts_as_taggable_on_tags_controller.rb
+```ruby
+class ActsAsTaggableOnTagsController < ResourcesController
+  # set default model (Tag is in different namespace) see https://github.com/josevalim/inherited_resources#overwriting-defaults
+  defaults resource_class: ActsAsTaggableOn::Tag
+end
+```
+
+## Dynamicly showed and hidden attributes 
+
+Sometimes you need to hide or display field depending on the entered value of other field in new/edit form. 
+When you take a look at this table you will see that it is exactly what you need right now. Because resolution can be added only to closed bugs (with resolved or verified status) as you can see in this table.
+
+<table >
+  <thead>
+    <tr>
+      <td>
+        <h4>Status</h4>
+      </td>
+
+      <td>
+        <h4>Resolution</h4>
+      </td>
+    </tr>
+  </thead>
+
+  <tbody>
+  <tr>
+    <td colspan="2">Open bugs</td>
+  </tr>
+  <tr>
+    <td>
+      <dl>
+        <dd >Unconfirmed</dd>
+        <dd>New</dd>
+        <dd>Assigned</dd>
+        <dd>Reopened</dd>
+        <dd>Ready</dd>
+      </dl>
+    </td>
+
+    <td>
+      No resolution yet.
+    </td>
+  </tr>
+
+  <tr >
+    <td colspan="2">Closed bugs</td>
+  </tr>
+
+  <tr>
+    <td>
+      <dl>
+        <dd >Resolved</dd>
+        <dd >Verified</dd>
+      </dl>
+    </td>
+
+    <td>
+      <dl>
+        <dd >Fixed</dd>
+        <dd >Invalid</dd>
+        <dd >Wontfix</dd>
+        <dd >Duplicate</dd>
+        <dd >Worksforme</dd>
+        <dd>Incomplete</dd>
+      </dl>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+First of all, you need to display status and resoultion field as a select box to limit possible values. You can use enum field type and than define model method with array of values which will be displayed as select box options. Check out rails_admin's [:enum field type](https://github.com/sferik/rails_admin/wiki/Enumeration) wiki page for more.
+
+> app/models/issues
+```ruby
+class Issue < ActiveRecord::Base
+...
+  rails_admin do
+    # show ...
+    # list ...
+
+    edit do
+      field :name
+      field :description
+      field :project
+      # set type of status and resolution to enem
+      field :status, :enum
+      field :resolution, :enum
+    end
+  end
+  
+  # method for retrieving potencial values for status field
+  def status_enum
+    ["Unconfirmed", "New", "Assigned", "Reopened", "Ready", "Resolved", "Verified"]
+  end
+
+  # method for retrieving potencial values for resolution field
+  def resolution_enum
+    ["Fixed", "Invalid", "Wontfix", "Worksforme", "Incomplete"]
+  end
+end
+```
+
+As table shows resolution needs to be displayed only when status is either "Resolved" or "Verified". In all other cases resolution should be hidden. Thanks to lepidlo you can easily do this.
+
+> app/models/issues.rb
+```ruby
+...
+  field :status, :enum do
+    html_attributes do
+    { 
+      data: { 
+        "dynamic-fields" => [
+          { condition: ["Unconfirmed", "New", "Assigned", "Reopened", "Ready"], field_actions: { resolution: { visible: false }} },
+          { condition: ["Resolved", "Verified"], field_actions: { resolution: { visible: true  }} },
+        ]   
+      }   
+    }   
+    end 
+  end
+```
+
+Let's explain it step by step. You can add html attributes(like class, id, etc.) in configuration of any field through ```html_attributes```. Data hash is used for custom data attributes for many purposes like marking ajax requests or date picker in Rails. Lepidlo uses it too. In addition to dynamicly showed / hidden attributes for [dependant select boxes](https://github.com/lksv/lepidlo/wiki/Getting-started#dependant-select-boxes) and some field types like wysihtml5.
+
+```ruby
+  html_attributes do
+    { 
+      class: "my_css_class",
+      data: { 
+        # this will add data-name attribute to field 
+        "name" => "John",
+        
+        # this will add data-city attribute to field 
+        "city" => "Brno"
+      }  
+  end
+```
+
+The only missing part is "dynamic-fields" attribute which will be processed by lepidlo. It contains list (array) of conditions and related actions (hash) when condition is met. Condition is true when given field (in this case status) is equal to any of the values specified in condition array.
+
+```ruby
+  "dynamic-fields" => [
+    {
+      # when this field has one of these values -> fieds_actions are executed 
+      condition: ["Unconfirmed", "New", "Assigned", "Reopened", "Ready"],
+      # set visibility of resolution to false (= hide resolution field)
+      field_actions: { resolution: { visible: false } } 
+    },
+    { 
+      condition: ["Resolved", "Verified"], 
+      field_actions: { resolution: { visible: true  }} 
+    }
+  ]   
+```
+
+## Dependant select boxes
+
+For better demonstration of depandant select boxes let's introduce small change to application and include versions of projects.
+Project can have many versions and issue will be tied to specific version of project.
+<!-- TODO which results in this database schema -->
+So let's generate Version scaffold and add version_id to issues. Then migrate the database.
+```console
+rails g scaffold Version name project:belongs_to
+rails g migration addVersionIdToIssues version:belongs_to
+rake db:migrate
+```
+
+Then you need to add associations in appropriate models, do not forget inverse_of.
+```
+class Issue < ActiveRecord::Base
+  belongs_to :project, inverse_of: :issues
+  belongs_to :version, inverse_of: :issues
+  ..
+end
+
+class Project < ActiveRecord::Base
+  has_many :versions, inverse_of: :project
+  has_many :issues, inverse_of: :project
+end
+
+class Version < ActiveRecord::Base
+  belongs_to :project, inverse_of: :versions
+  has_many :issues, inverse_of: :version
+end
+```
+
+This leads us to our problem when you are creating or updating issue you now need to enter not just project but specific version of that project which is not working properly. Suppose you've 2 projects project A and project B. Project A has versions
+1.0 2.0 and project B has versions 1.0, 1.1 and 1.2, it allows you to enter incorrect for example version 1.1 and project A (version 1.1 doesn't belongs to project A). 
+What you want to do is display only versions related to currently selected project. 
+
+Actually you might be wondering how is it even possible that options for associations are displayed in selectboxes at all.
+Where are they from? These values are obtained by making ajax call to options method of particular controller of association.
+For example values for project association are retrieved by options method call to ```ProjectsController```. Values for version's associations by ```VersionsController#options``` call. Basicaly controllers retrieve values of related model no matter whence they are called unless you specify otherwise. That can be done either by changing ```options_source``` in model to different url or by defining ```options``` method in controller. Here is the example of this method which demonstrates default behaviour (it's going to work the same way if you do not define this method). 
+
+> app/controllers/versions_controller.rb
+```ruby
+  def options
+    authorize!(action_name.to_sym, resource_class) # CanCan
+    versions = Version.search(params[:f]).result
+    options!(collection: versions)
+  end
+```
+
+First line needs to be there to ensure authorization. Then it retrieves all ```Version``` records that match current search params and forward these records to parent action ```options!```. If you try manually append search params to options url ```/versions/options``` for example ```/versions/options?f[name_cont]=1.``` which will display versions with name containing substring '1.'.
+<!-- TODO mention format of options -->
+
+So you already know that every time you click on select2 field it makes call to ```options``` method to display drop-down menu with options and it display all records as options unless you specify search parameters.
+
+Yes, that's cool. But how to set these parameters in new or edit form with current values? The lepidlo once again make use of html attributes more precisely html data attributes. 
+
+> app/models/issues.rb
+```ruby
+      field :version do
+        html_attributes do
+          { data: { 
+              # set project's field as dependent select box
+              "dependant-filteringselect" => "field=project_id",
+
+              # post parameters
+              "dependant-param" => "f[project_id_eq]" 
+            } 
+          }
+        end
+      end
+```
+
+To display only versions which belongs to currently selected project it marks projects field as "dependant-filteringselect". 
+Id of currently selected project (if there is any) is send as parameter("f[project_id_eq]") to ```VersionsController#options```.Without defining "dependant-param" id of currently selected would be send in params[:undefined] which would be ignored by ```options``` method.
+
+You do not have to use search params and write you options method the way you want but most of the time using search params and default ```options``` method will be sufficient.
+
+
+<!-- continue -->
+<!-- TODO identifying field -->
+
+It works quite well except it displays all versions as options at beginning. To deal with this unique case you can set default options query send when form (new or edit) is rendered for the first time. It can be defined in ```options_source_params``` block. 
+You have to remember that you are working with both new and edit form. In new form it would be enough to set default query "f[project_id_eq]" to id of non-existing project which will not display any versions at the beginning. 
+
+> app/models/issues.rb
+```ruby
+      field :version do
+        options_source_params do
+          { "f[project_id_eq]" => -1 }
+        end
+        html_attributes do
+          { data: { 
+              # set project's field as dependent select box
+              "dependant-filteringselect" => "field=project_id",
+
+              # post parameters
+              "dependant-param" => "f[project_id_eq]" 
+            } 
+          }
+        end
+      end
+```
+
+But if you want to change version in edit form of existing issue that has project already set it would display no versions as well. Unless you select a project which override default id -1. So if the issue(```bindings[:object]```) has project set use that ```project_id``` as a default query otherwise use -1.
+
+> app/models/issues.rb
+```ruby
+  options_source_params do
+    { "f[project_id_eq]" => bindings[:object].try(:project_id) || -1 }
+  end
+```

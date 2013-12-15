@@ -1,3 +1,16 @@
+<%= content_for(:page_actions) do  %>
+  <%# Rename EDIT -> Modify  %>
+  <% if can? :edit, resource %>
+    <%= link_to edit_resource_path, class: 'btn btn-info' do %>
+      <i class="icon-pencil"> Modify project</i> 
+    <% end %>
+  <% end %>
+  <%#= link_to delete_resource_path, class: "btn btn-danger" %>
+  <%= render "forms/buttons/delete", url: resource_path if can? :destroy, resource %>
+<% end %>
+<!-- TODO routing variables -->
+<!-- TODO list of things I can render -->
+
 <%= render "header" %>
 <%= render "show" %>
 

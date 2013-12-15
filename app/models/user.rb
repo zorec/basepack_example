@@ -20,7 +20,9 @@
 class User < ActiveRecord::Base
   has_many :filters, inverse_of: :user  
   has_many :created_projects, class_name: "Project", foreign_key: "user_id", inverse_of: :user
-  has_many :issues, inverse_of: :user
+  has_many :created_issues, class_name: "Issue", foreign_key: "user_id", inverse_of: :user
+#  has_and_belongs_to_many :issues
+  has_and_belongs_to_many :involved_issues, join_table: :issues_users, class_name: "Issue"
 
   # Include default devise modules. Others available are
   # :confirmable, :lockable, :timeoutable and :omniauthable

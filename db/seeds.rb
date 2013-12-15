@@ -5,12 +5,19 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+projects = []
+projects << Project.create(name: "Project A", start: Date.today, :end => Date.today + 3.months)
+projects << Project.create(name: "Project B", start: Date.today + 2.months, :end => Date.today + 5.months)
 
-project = Project.create(name: "Project A")
+Version.create(name: "1.0", project_id: projects.first.id)
+Version.create(name: "1.1", project_id: projects.first.id)
+
+Version.create(name: "1.0", project_id: projects[1].id)
+Version.create(name: "2.0", project_id: projects[1].id)
 
 
-Issue.create(name: "Issue 1", project_id: project.id)
-Issue.create(name: "Issue 2", project_id: project.id)
-Issue.create(name: "Issue 3", project_id: project.id)
+# Issue.create(name: "Issue 1", project_id: projects.first.id)
+# Issue.create(name: "Issue 2", project_id: projects.first.id)
+# Issue.create(name: "Issue 3", project_id: projects.first.id)
 
  
