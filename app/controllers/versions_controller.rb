@@ -12,10 +12,10 @@ class VersionsController < ResourcesController
   #   end
   # end
 
-  def options
-    authorize!(action_name.to_sym, resource_class) # CanCan
-    options!(collection: Version.search(params[:f]).result(distinct: true))
-  end
+  # def options
+  #   authorize!(action_name.to_sym, resource_class) # CanCan
+  #   options!(collection: Version.search(params[:f]).result(distinct: true))
+  # end
 
   # def options
   #   authorize!(action_name.to_sym, resource_class) # CanCan

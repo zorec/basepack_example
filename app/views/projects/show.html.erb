@@ -19,12 +19,23 @@
 <%#= form_render list_form %> -->
 
 <h3>Add new issues</h3>
-<%= form_render edit_form_for([association_chain, resource, Issue].flatten) %>
+<% issue_edit_form_for = edit_form_for([association_chain, resource, Issue].flatten) do |form|%>
+  <% form.field :project do |f1| %>
+    <% f1.visible = false %>
+    <% f1.value = resource.id %>
+  <% end %>
+
+  <% form.field :version do |f2| %>
+    <%# f2.visible = false %>
+    <% f2.options_source_params = { "f[project_id_eq]" => resource.id } %>
+  <% end %>  
+<% end %>
+
+<%= form_render issue_edit_form_for %>
 
 <h3><%= model_name_pluralize Issue %></h3>
 <% resource.issues.each do |issue| %>
   <% issue_show_form = show_form_for(issue) do |form| %>
-    <% form.hide_fileds :project %>
     <% form.field :project do |field| %>
       <% field.visible = false %>
     <% end %>

@@ -1,0 +1,14 @@
+<%= render "header" %>
+<% edit_form.configure do |form| %>
+  <% form.field :project do |f1| %>
+    <% f1.html_attributes = { class: 'span3' } %>
+    <% f1.visible = false %>
+  <% end %>
+
+  <% form.field :version do |f2| %>
+    <% f2.options_source_params = { "f[project_id_eq]" => resource.id } %>
+  <% end %>
+  
+<% end %>
+
+<%= form_render edit_form %>

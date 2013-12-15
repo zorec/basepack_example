@@ -293,6 +293,15 @@ That means you can use ```show_form_for``` to get the same content as in show pa
 <% end %>
 ```
 
+Furthermore these helpers for retrieving content of forms have pair variant without ```_for``` at the end which already contains retrieved content in appropriate actions. For example in projects show page ```show_form``` is equivalent to show_form_for(resource).
+```ruby
+edit_form
+show_form
+list_form
+query_for
+...
+```
+
 <!-- TODO small change to show_form to demonstrate customization -->
 
 
