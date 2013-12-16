@@ -32,7 +32,12 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-gem 'basepack', path: '../basepack'
+group :production do
+  gem 'rails_12factor'
+  gem 'pg'
+end
+
+gem 'basepack', git: 'https://github.com/lksv/basepack'
 gem "acts-as-taggable-on"
 gem 'acts_as_commentable'
   
