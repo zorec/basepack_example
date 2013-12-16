@@ -23,7 +23,7 @@ class Project < ActiveRecord::Base
 
   # strip_attributes :collapse_spaces => true
 
-  accepts_nested_attributes_for :versions
+  accepts_nested_attributes_for :versions, allow_destroy: true
 
   rails_admin do
     exclude_fields :id, :created_at, :updated_at, :issues

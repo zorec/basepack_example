@@ -64,6 +64,7 @@ gem "dragonfly"
 gem "delayed_job_active_record", ">= 4.0.0.beta2"
 gem "strip_attributes", "~> 1.2"
 
+gem 'bootstrap-sass'
 
 group :development do
   # gem 'guard-spork', '~> 1.5.1'

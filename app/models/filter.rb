@@ -36,7 +36,7 @@ class Filter < ActiveRecord::Base
    resource_filter, filtered_scope = Basepack::Utils.filter(
      scope,
      { ql: self.filter },
-     basepack::Utils.model_config(resource_class),
+     Basepack::Utils.model_config(resource_class),
      {
        auth_object: current_ability,
        filterql_options: filterql_options
