@@ -189,7 +189,7 @@ class Project < ActiveRecord::Base
 end
 ```
 
-This implicitly sets permitted params which could be written as:
+This implicitly sets permitted params which could be written as follows:
 ```ruby
 def permitted_params
   params.permit(:project => [:name, :description, :start, :finish])

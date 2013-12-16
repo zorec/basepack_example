@@ -21,6 +21,8 @@ IssueTracker::Application.routes.draw do
   
   resources :issues, concerns: :resourcable do
     resources :comments, concerns: :resourcable
+    get 'get_involved' => 'issues', on: :member
+    get 'get_uninvolved' => 'issues', on: :member
   end
   
   resources :projects, concerns: :resourcable do

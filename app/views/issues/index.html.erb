@@ -1,0 +1,14 @@
+<% list_form.content_for_actions do |form| %>
+  <% result = ''.html_safe %>
+  <% result << form.render_show_action %>
+  <% result << form.render_edit_action %>
+  <% result << form.render_destroy_action %>
+  <% if user_signed_in? and form.resource.involved_users.include? current_user %>
+    <% result << form.render_action('Get uninvolved', get_uninvolved_issue_path(id: form.resource.id.to_s))  %>
+  <% else %>
+    <% result << form.render_action('Get involved', get_involved_issue_path(id: form.resource.id.to_s))  %>
+  <% end %>
+<% end %>
+
+<%= render "header" %>
+<%= render "index" %>

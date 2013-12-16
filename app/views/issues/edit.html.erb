@@ -6,7 +6,7 @@
   <% end %>
 
   <% form.field :version do |f2| %>
-    <% f2.options_source_params = { "f[project_id_eq]" => resource.id } %>
+    <% f2.options_source_params = { "f[project_id_eq]" => resource.project_id } %>
   <% end %>
   
 <% end %>

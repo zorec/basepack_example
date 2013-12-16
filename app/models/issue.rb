@@ -31,7 +31,6 @@ class Issue < ActiveRecord::Base
     # end
 
     list do
-
       # display issue's name as a link
       # field :name do
       #   formatted_value do
@@ -62,7 +61,7 @@ class Issue < ActiveRecord::Base
       #     { data: { "dependant-filteringselect" => "field=project_id", "dependant-param" => param } }
       #   end
       # end
-
+      
       field :version do
         options_source_params do
           # default query sended from form when asking for select2 items (e.g. ajax call /versions/options?<params_goes_here>)
