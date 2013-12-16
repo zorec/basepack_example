@@ -1,11 +1,11 @@
 ## Introduction
 
-This tutorial is designed for learning lepidlo which is based on Ruby on Rails framework. So previous experience with Ruby on Rails is necessary but you do not need to be an expert. There is the [README] (https://github.com/lksv) for shorter introduction and demonstration of lepidlo.  
+This tutorial is designed for learning basepack which is based on Ruby on Rails framework. So previous experience with Ruby on Rails is necessary but you do not need to be an expert. There is the [README] (https://github.com/lksv) for shorter introduction and demonstration of basepack.  
 
-Lepidlo is a collection of gems (which are useful in any application) tied together with additional features on top of it. 
-Installing lepidlo's gem really enhances the power of Ruby on Rails. And remember you can still use everything what development in Ruby on Rails provides. For example use lepidlo's features only in parts of application.
+Basepack is a collection of gems (which are useful in any application) tied together with additional features on top of it. 
+Installing basepack's gem really enhances the power of Ruby on Rails. And remember you can still use everything what development in Ruby on Rails provides. For example use basepack's features only in parts of application.
 
-For easy start it is highly recommended that you are familiar with gems below (you have used them at least in one application) because these gems are essential part of lepidlo. Although there is no need to worry if you do not know them you will be supplied with additional links to related sections through all tutorial. 
+For easy start it is highly recommended that you are familiar with gems below (you have used them at least in one application) because these gems are essential part of basepack. Although there is no need to worry if you do not know them you will be supplied with additional links to related sections through all tutorial. 
 * [Devise](ttps://github.com/plataformatec/devise)
 * [Cancan](https://github.com/ryanb/cancan.git)
 * [Rails_admin](https://github.com/sferik/rails_admin) (especially [rails_admin DSL](https://github.com/sferik/rails_admin/wiki/Railsadmin-DSL))
@@ -18,7 +18,7 @@ And being familiar with these may also help:
 * [Kaminari](https://github.com/amatsuda/kaminari)
 * [bootstrap-sass](https://github.com/thomas-mcdonald/bootstrap-sass)
 
-The lepidlo requires rails 4 and ruby 2 or higher, these versions were used in this tutorial.
+The basepack requires rails 4 and ruby 2 or higher, these versions were used in this tutorial.
 ```console
 rails -v
 ruby -v
@@ -30,7 +30,7 @@ ruby -v
 TODO Overview - listing sections 
 This tutorial walks you through construction of issue tracking application because best way to learn is by creating. Check out how the [application](TODO finished application) will look like at the end.
 
-Installation - you will learn how to install lepidlo to your application and basics of working with lepidlo.
+Installation - you will learn how to install basepack to your application and basics of working with basepack.
 Nested resource - what it is and how it works and how you can use it
 Default query - what is it and how to set it.
 Tagged issues with acts_as_taggabale
@@ -40,30 +40,30 @@ Namespaces
 
 -->
 
-## First application with lepidlo
+## First application with basepack
 
 In this tutorial you will create issue tracking application, let's start by creating new rails application.
 ```console
-rails new lepidlo_tutorial
-cd lepidlo_tutorial
+rails new basepack_tutorial
+cd basepack_tutorial
 ```
 
-Then add lepidlo gem to the application and run bundle to install it with all its dependancies.
+Then add basepack gem to the application and run bundle to install it with all its dependancies.
 > Gemfile:
 ```ruby
-gem 'lepidlo'
+gem 'basepack'
 ```
 
 ```console
 bundle install
 ```
 
-This will create a new lepidlo generator for us let's use it right away.
+This will create a new basepack generator for us let's use it right away.
 ```console
-rails g lepidlo:install
+rails g basepack:install
 ```
 
-The lepidlo generator notices the absence of cancan and devise files and offers you running generator for them as well.
+The basepack generator notices the absence of cancan and devise files and offers you running generator for them as well.
 
 Then it asks for confirmation to remove application.html.erb in order to use own application.html.haml with related partials (header, navigation, etc.). You can see how it looks in demo application.
 <!-- (TODO - see the screenshots below) -->
@@ -73,16 +73,16 @@ Then it asks for confirmation to remove application.html.erb in order to use own
 <!-- TODO seperate generators for cancan, devise and cancan -->
 Here is the summary of what generator did:
 * Added assets to ```application.js``` manifest file
-* Created new stylesheet ```app/assets/stylesheets/lepidlo_and_overrides.css```
+* Created new stylesheet ```app/assets/stylesheets/basepack_and_overrides.css```
 * Created new ability file ```app/models/ability.rb```
 * Added permissions for Filter to ability file
 * Added gems to ```Gemfile```
-* Created [settings file](https://github.com/binarylogic/settingslogic) ```config/lepidlo-settings.yml```
+* Created [settings file](https://github.com/binarylogic/settingslogic) ```config/basepack-settings.yml```
 * Created new models Import and Filter and database tables for them in migrations
-* Created localization file ```config/locales/lepidlo.en.yml```
+* Created localization file ```config/locales/basepack.en.yml```
 * Created new resources controller
 * Replaced ```application.html.erb``` 
-* Created partials used in lepidlo's template
+* Created partials used in basepack's template
 * Added new [concern](http://guides.rubyonrails.org/routing.html#routing-concerns) to routes
 * Created initializers for rails_admin and dragonfly
 * Created new filters controller
@@ -98,7 +98,7 @@ can :manage, :all
 rake db:migrate
 ```
 
-Everything is set up and ready to be used. Our application will need to track projects, which will have a lot of issues (has_many). Use scaffolding to create these resources. Functionality of scaffolding has been modified by lepidlo.
+Everything is set up and ready to be used. Our application will need to track projects, which will have a lot of issues (has_many). Use scaffolding to create these resources. Functionality of scaffolding has been modified by basepack.
 
 ```console
 rails g scaffold Project name description:text start:date finish:date
@@ -156,18 +156,18 @@ end
 <!-- TODO say about association -->
 <!-- wysihtml5 -->
 
-IMPORTANT! Make sure that you define inverse_of option on has_one, has_many and belongs_to associations. It is necessary for correct functioning of **lepidlo**, see [Rails documentation](http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#label-Bi-directional+associations) for explaination.
+IMPORTANT! Make sure that you define inverse_of option on has_one, has_many and belongs_to associations. It is necessary for correct functioning of **basepack**, see [Rails documentation](http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#label-Bi-directional+associations) for explaination.
 
 Notice that files for views are not generated (directories appp/views/projects and appp/views/issues are empty), but all RESTful(index, show, new, create, edit, update, destroy) actions are working correctly. It is because views iherit default look and you can easily override these defaults by creating appropriate files.
 
 Another difference is controllers which inherit from ResourcesController. Full inheritance hierarchy looks this way:
 ```ruby
-ProjectsController < ResourcesController < Lepidlo::BaseController < InheritedResources::Base
+ProjectsController < ResourcesController < Basepack::BaseController < InheritedResources::Base
 ```
 
 If you are not familiar with [InheritedResources](https://github.com/josevalim/inherited_resources), now is a time to take a look at [it](https://github.com/josevalim/inherited_resources).  
 
-[Lepidlo::BaseController](https://github.com/lksv/lepidlo/blob/master/app/controllers/lepidlo/base_controller.rb) adds to inherited resources:
+[Basepack::BaseController](https://github.com/lksv/basepack/blob/master/app/controllers/basepack/base_controller.rb) adds to inherited resources:
 * defining strong parameters
 * ```options``` method
 * ```taggings``` method
@@ -267,7 +267,7 @@ list_form_for(query_form)
 query_form_for(class_or_chain, scope, options = {})
 ...
 ```
-These methods returns content of section for specific resource let's call it instnce of form. Actually it is a instance of ```Lepidlo::Forms``` class. 
+These methods returns content of section for specific resource let's call it instnce of form. Actually it is a instance of ```Basepack::Forms``` class. 
 Resource chain is a sequence (array) of resources in case of nested resources. You can see this sequence in a breadcrumb and you have also access to ```association_chain``` which is an empty array in project's show page. But if projects were nested resource for users e.g. url organization/3/users/2/projects/1 than ```association_chain``` would contain third organization object and second user.
 
 In your views, you will get the following helpers:
@@ -280,7 +280,7 @@ association_chain              #=> array of resources
 ```
 As you might expect, collection, collection_without_pagination (@projects instance variable) is only available on index actions.
 
-That means you can use ```show_form_for``` to get the same content as in show page of every issue in current project. For displaying you have to use ```form_render``` because ```render``` does not know how to render instances of lepidlo forms (in this case  ```Lepidlo::Forms::Show``` object). 
+That means you can use ```show_form_for``` to get the same content as in show page of every issue in current project. For displaying you have to use ```form_render``` because ```render``` does not know how to render instances of basepack forms (in this case  ```Basepack::Forms::Show``` object). 
 
 > app/views/projects/show.html.erb:
 ```rhtml
@@ -308,7 +308,7 @@ query_for
 <!-- This code can look little complicated so it does not matter if you do not understand we will talk more about it later.
 association_chain is in this case empty array because there is nothing before projects, take a look at breadcrump (projects), but we have for example users 1 project show than association_chain would contain users and it would be neccery for proper
 displaying of paths.
-We want to display it in list_form which needs ```Lepidlo::Forms::Query``` object that's why we call query on it. 
+We want to display it in list_form which needs ```Basepack::Forms::Query``` object that's why we call query on it. 
  
  -->
 
@@ -316,7 +316,7 @@ We want to display it in list_form which needs ```Lepidlo::Forms::Query``` objec
 Imagine that there were many (hundred) projects especially these which already ended and every time you enter project index you see these passed projects and you have to search within them. It would be better to change default query which is currently just display all projects in order as they are in database (most of the time it is order in which they were created).
 
 And if you are familiar with [ransack](https://github.com/activerecord-hackery/ransack) it is really simple to change this default query. You just need to call method ```default_query``` in appropriate controller, which returns a hash of parameters for search. 
-Lepidlo uses ransack under hood uses, but you have to use ```f``` as a default param key for search (instead of ```q```) and for searching use ```f[s]```.
+Basepack uses ransack under hood uses, but you have to use ```f``` as a default param key for search (instead of ```q```) and for searching use ```f[s]```.
 
 > app/controllers/projects_controller.rb:
 ```
@@ -353,10 +353,10 @@ rails g acts_as_taggable_on:migration
 rake db:migrate
 ```
 
-The created model is located in different namespace which means lepidlo will not detect it automatically and you have to include it manually in the rails_admin configuration file.
+The created model is located in different namespace which means basepack will not detect it automatically and you have to include it manually in the rails_admin configuration file.
 > config/initializers/rails_admin.rb:
 ```ruby
-config.included_models = Lepidlo::Utils.detect_models + ['ActsAsTaggableOn::Tag']
+config.included_models = Basepack::Utils.detect_models + ['ActsAsTaggableOn::Tag']
 ```
 Mark issues model as taggabale with ```acts_as_taggable``` which will provide new methods for working with tags as specified in [usage section](https://github.com/mbleigh/acts-as-taggable-on#usage). 
 
@@ -385,7 +385,7 @@ class Issue < ActiveRecord::Base
 end
 ```
 
-To make it even better render the tag_list field with lepidlo's [partial](https://github.com/lksv/lepidlo/blob/master/app/views/forms/edit/_tag_list_with_suggestions.html.haml?source=c) which uses select2 and provides autocompletion by making ajax calls to taggings method of particular controller (IssuesController in this case)
+To make it even better render the tag_list field with basepack's [partial](https://github.com/lksv/basepack/blob/master/app/views/forms/edit/_tag_list_with_suggestions.html.haml?source=c) which uses select2 and provides autocompletion by making ajax calls to taggings method of particular controller (IssuesController in this case)
 
 > app/models/issues.rb
 ```ruby 
@@ -507,7 +507,7 @@ class Issue < ActiveRecord::Base
 end
 ```
 
-As table shows resolution needs to be displayed only when status is either "Resolved" or "Verified". In all other cases resolution should be hidden. Thanks to lepidlo you can easily do this.
+As table shows resolution needs to be displayed only when status is either "Resolved" or "Verified". In all other cases resolution should be hidden. Thanks to basepack you can easily do this.
 
 > app/models/issues.rb
 ```ruby
@@ -526,7 +526,7 @@ As table shows resolution needs to be displayed only when status is either "Reso
   end
 ```
 
-Let's explain it step by step. You can add html attributes(like class, id, etc.) in configuration of any field through ```html_attributes```. Data hash is used for custom data attributes for many purposes like marking ajax requests or date picker in Rails. Lepidlo uses it too. In addition to dynamicly showed / hidden attributes for [dependant select boxes](https://github.com/lksv/lepidlo/wiki/Getting-started#dependant-select-boxes) and some field types like wysihtml5.
+Let's explain it step by step. You can add html attributes(like class, id, etc.) in configuration of any field through ```html_attributes```. Data hash is used for custom data attributes for many purposes like marking ajax requests or date picker in Rails. Basepack uses it too. In addition to dynamicly showed / hidden attributes for [dependant select boxes](https://github.com/lksv/basepack/wiki/Getting-started#dependant-select-boxes) and some field types like wysihtml5.
 
 ```ruby
   html_attributes do
@@ -542,7 +542,7 @@ Let's explain it step by step. You can add html attributes(like class, id, etc.)
   end
 ```
 
-The only missing part is "dynamic-fields" attribute which will be processed by lepidlo. It contains list (array) of conditions and related actions (hash) when condition is met. Condition is true when given field (in this case status) is equal to any of the values specified in condition array.
+The only missing part is "dynamic-fields" attribute which will be processed by basepack. It contains list (array) of conditions and related actions (hash) when condition is met. Condition is true when given field (in this case status) is equal to any of the values specified in condition array.
 
 ```ruby
   "dynamic-fields" => [
@@ -591,7 +591,7 @@ end
 ```
 
 This leads us to our problem when you are creating or updating issue you now need to enter not just project but specific version of that project which is not working properly. Suppose you've 2 projects project A and project B. Project A has versions
-1.0 2.0 and project B has versions 1.0, 1.1 and 1.2, it allows you to enter incorrect for example version 1.1 and project A (version 1.1 doesn't belongs to project A). 
+1.0 and 2.0. Project B has versions 1.0, 1.1 and 1.2, it allows you to enter incorrect for example version 1.1 and project A (version 1.1 doesn't belongs to project A). 
 What you want to do is display only versions related to currently selected project. 
 
 Actually you might be wondering how is it even possible that options for associations are displayed in selectboxes at all.
@@ -612,7 +612,7 @@ First line needs to be there to ensure authorization. Then it retrieves all ```V
 
 So you already know that every time you click on select2 field it makes call to ```options``` method to display drop-down menu with options and it display all records as options unless you specify search parameters.
 
-Yes, that's cool. But how to set these parameters in new or edit form with current values? The lepidlo once again make use of html attributes more precisely html data attributes. 
+Yes, that's cool. But how to set these parameters in new or edit form with current values? The basepack once again make use of html attributes more precisely html data attributes. 
 
 > app/models/issues.rb
 ```ruby
