@@ -34,10 +34,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-group :production do
-  gem 'rails_12factor'
-  gem 'pg'
-end
+gem 'pg', group: :production
 
 gem 'basepack', git: 'https://github.com/lksv/basepack'
 gem "acts-as-taggable-on"
@@ -88,3 +85,6 @@ group :development do
   gem 'meta_request'
   gem 'rails-erd'
 end
+
+ruby "2.0.0"
+gem 'rails_12factor', group: :production
