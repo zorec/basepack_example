@@ -25,6 +25,10 @@ IssueTracker::Application.routes.draw do
     get 'get_uninvolved' => 'issues', on: :member
   end
   
+  namespace :private do
+    resources :projects, concerns: :resourcable
+  end
+
   resources :projects, concerns: :resourcable do
     resources :issues, concerns: :resourcable
   end

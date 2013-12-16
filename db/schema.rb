@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131208112918) do
+ActiveRecord::Schema.define(version: 20131216110952) do
 
   create_table "comments", force: true do |t|
     t.string   "title",            limit: 50, default: ""
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(version: 20131208112918) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "privacy",     default: false
   end
 
   add_index "projects", ["user_id"], name: "index_projects_on_user_id"

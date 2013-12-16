@@ -32,7 +32,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-gem 'lepidlo', path: '../lepidlo'
+gem 'basepack', path: '../basepack'
 gem "acts-as-taggable-on"
 gem 'acts_as_commentable'
   

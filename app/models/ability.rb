@@ -3,14 +3,17 @@ class Ability
 
   def initialize(user)
     can :read, Filter
-    can :manage, Filter, :user_id => user.id if user
+    can :manage, Filter, user_id: user.id if user
     
+    can :manage, Project
+    cannot [:manage], Project, privacy: true
+
     
-    can :create, Project, :user_id => user.try(:id)
+    can :create, Project, user_id: user.try(:id)
     can :read, Issue
-    can :manage, Issue, :user_id => user.try(:id)
+    can :manage, Issue, user_id: user.try(:id)
     
-    can :manage, :all
+    # can :manage, :all
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)

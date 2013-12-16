@@ -22,14 +22,14 @@
 #
 
 class Import < ActiveRecord::Base
-  include Lepidlo::Import::ModelDragonfly
+  include Basepack::Import::ModelDragonfly
 
   belongs_to :user, inverse_of: :imports
 
   handle_asynchronously :import_data
 
   RailsAdmin.config do
-    Lepidlo::Utils.model_config(Import).show.field :user
+    Basepack::Utils.model_config(Import).show.field :user
   end
 end
 

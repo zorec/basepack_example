@@ -33,10 +33,10 @@ class Filter < ActiveRecord::Base
 
   def results(scope, current_ability, filterql_options = {})
    resource_class = self.filter_type.constantize
-   resource_filter, filtered_scope = Lepidlo::Utils.filter(
+   resource_filter, filtered_scope = Basepack::Utils.filter(
      scope,
      { ql: self.filter },
-     Lepidlo::Utils.model_config(resource_class),
+     basepack::Utils.model_config(resource_class),
      {
        auth_object: current_ability,
        filterql_options: filterql_options

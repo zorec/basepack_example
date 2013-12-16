@@ -1,3 +1,3 @@
 # encoding: UTF-8
-class ResourcesController < Lepidlo::BaseController
+class ResourcesController < Basepack::BaseController
 end

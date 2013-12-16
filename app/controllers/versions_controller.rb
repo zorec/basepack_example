@@ -1,5 +1,5 @@
 class VersionsController < ResourcesController
-  include Lepidlo::Import::Controller
+  include Basepack::Import::Controller
 
   # def options
   #   if params[:f].try(:[], :id_eq).to_i == -1 
