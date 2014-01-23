@@ -64,7 +64,7 @@ gem "settingslogic"
 gem "twitter-bootstrap-rails"
 gem "bootbox-rails"
 gem "rack-cache", require: "rack/cache"
-gem "dragonfly"
+gem 'dragonfly', '~> 1.0.2'
 gem "delayed_job_active_record", ">= 4.0.0.beta2"
 gem "strip_attributes", "~> 1.2"
 

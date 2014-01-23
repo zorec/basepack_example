@@ -18,7 +18,7 @@ class ProjectsController < ResourcesController
     end 
   end 
 
-  default_query do
+  def default_query_params
     { # display projects which haven't ended yet (end today or later)
       "f[end_gteq_null]" => Date.today,
 
