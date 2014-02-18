@@ -41,6 +41,7 @@ class Issue < ActiveRecord::Base
       # field :status, :enum
       # field :resolution, :enum
       exclude_fields :project
+      include_fields :user
     end
 
     edit do
@@ -51,7 +52,7 @@ class Issue < ActiveRecord::Base
           IssuesController === bindings[:controller]
         end
       end
-
+      field :user
       # field :version do
       #   param = "f[project_id_eq]"
       #   options_source_params do

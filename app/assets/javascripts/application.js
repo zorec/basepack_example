@@ -15,4 +15,13 @@
 //= require jquery_ujs
 //= require basepack
 //= require turbolinks
+//
+//= require bootstrap-wysihtml5
+//
+// # You may include all locales like this
+// # require bootstrap-wysihtml5/locales
+// # Or just add the ones that you want
+// # require bootstrap-wysihtml5/locales/de-DE
+// # require bootstrap-wysihtml5/locales/es-ES
+//
 //= require_tree .

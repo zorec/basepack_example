@@ -2,12 +2,13 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    can :manage, :all
+    # can :manage, :all
+
     can :read, Filter
     can :manage, Filter, user_id: user.id if user
     
     can :manage, Project
-    cannot [:manage], Project, privacy: true
+    cannot :manage, Project, privacy: true
 
     
     can :create, Project, user_id: user.try(:id)

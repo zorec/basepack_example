@@ -1,4 +1,2 @@
-Example application for **Lepidlo**
+Example application for **Basepack**
 =======
-
-Work in progress!
